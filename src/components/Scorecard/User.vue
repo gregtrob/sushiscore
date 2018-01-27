@@ -59,7 +59,6 @@ export default {
       this.$store.dispatch('changeUserName', payload)
       this.nameEditMode = false
       console.log(this.$store.getters.getUsers)
-      this.$forceUpdate()
     }
   }
 }

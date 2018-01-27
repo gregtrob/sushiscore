@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {RoundScore} from '@/store/services/score'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
     userScores: [
+      new RoundScore()
     ],
     // switch to an array for this and utilize a forEach going through it
     // alternatively consider a backing map of the array with the "id" and the

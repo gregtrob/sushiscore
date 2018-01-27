@@ -1,4 +1,4 @@
-export class RoundScore {
+class RoundScore {
   makiPoints = 0
   makiScore = 0
   tempuraCards = 0
@@ -26,13 +26,21 @@ export class RoundScore {
   }
 
   getCardScore () {
-    const tempuraScore = (this.tempuraCards / 2) * 5
-    const sashimiScore = (this.sashimiCards / 3) * 10
+    const tempuraScore = this.getTempuraScore()
+    const sashimiScore = this.getSashimiScore()
     const dumplingScore = this.getDumplingScore()
 
     const nigiriScore = this.nigiriCards.getNigiriScore()
 
     return tempuraScore + sashimiScore + dumplingScore + nigiriScore
+  }
+
+  getSashimiScore () {
+    return (Math.floor(this.sashimiCards / 3)) * 10
+  }
+
+  getTempuraScore () {
+    return (Math.floor(this.tempuraCards / 2)) * 5
   }
 
   getDumplingScore () {
@@ -89,7 +97,7 @@ class NigiriCards {
   }
 }
 
-export const Scorer = {
+const Scorer = {
   findMakiWinners (roundScores) {
     let firstPlaceScore = 0
     let secondPlaceScore = 0
@@ -113,7 +121,7 @@ export const Scorer = {
         secondPlaceArray = []
         secondPlaceArray.push(roundScores[i])
       }
-    } FUCK
+    }
 
     let makiFirstPoints = Math.trunc(6 / firstPlaceArray.length)
     firstPlaceArray.forEach(function (score) {
@@ -130,3 +138,5 @@ export const Scorer = {
 
   }
 }
+
+export {RoundScore, NigiriCards, Scorer}
