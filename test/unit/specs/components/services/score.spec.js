@@ -88,4 +88,89 @@ describe('Round Score', () => {
     rs.tempuraCards = 10
     expect(rs.getTempuraScore(), '10 tempura').to.equal(25)
   })
+  it('Nigiri Salmon Score', () => {
+    let rs = new RoundScore(0, 0,
+      0, 0,
+      0,
+      0, 0,
+      0, 0,
+      0, 0)
+
+    expect(rs.getNigiriScore(), '0 Salmon Nigiri').to.equal(0)
+
+    rs.nigiriCards.salmonNoWasabi = 1
+    expect(rs.getNigiriScore(), '1 Salmon Nigiri No Wasabi 0 with Wasabi').to.equal(2)
+
+    rs.nigiriCards.salmonNoWasabi = 0
+    rs.nigiriCards.salmonWithWasabi = 1
+    expect(rs.getNigiriScore(), '0 Salmon Nigiri No Wasabi 1 With Wasabi').to.equal(6)
+
+    rs.nigiriCards.salmonNoWasabi = 1
+    rs.nigiriCards.salmonWithWasabi = 1
+    expect(rs.getNigiriScore(), '1 Salmon Nigiri No Wasabi 1 With Wasabi').to.equal(8)
+
+    rs.nigiriCards.salmonNoWasabi = 3
+    rs.nigiriCards.salmonWithWasabi = 3
+    expect(rs.getNigiriScore(), '3 Salmon Nigiri No Wasabi 3 With Wasabi').to.equal(24)
+  })
+  it('Nigiri Squid Score', () => {
+    let rs = new RoundScore(0, 0,
+      0, 0,
+      0,
+      0, 0,
+      0, 0,
+      0, 0)
+
+    expect(rs.getNigiriScore(), '0 Squid Nigiri').to.equal(0)
+
+    rs.nigiriCards.squidNoWasabi = 1
+    expect(rs.getNigiriScore(), '1 Squid Nigiri No Wasabi 0 with Wasabi').to.equal(3)
+
+    rs.nigiriCards.squidNoWasabi = 0
+    rs.nigiriCards.squidWithWasabi = 1
+    expect(rs.getNigiriScore(), '0 Squid Nigiri No Wasabi 1 With Wasabi').to.equal(9)
+
+    rs.nigiriCards.squidNoWasabi = 1
+    rs.nigiriCards.squidWithWasabi = 1
+    expect(rs.getNigiriScore(), '1 Squid Nigiri No Wasabi 1 With Wasabi').to.equal(12)
+
+    rs.nigiriCards.squidNoWasabi = 3
+    rs.nigiriCards.squidWithWasabi = 3
+    expect(rs.getNigiriScore(), '3 Squid Nigiri No Wasabi 3 With Wasabi').to.equal(36)
+  })
+  it('Nigiri Egg Score', () => {
+    let rs = new RoundScore(0, 0,
+      0, 0,
+      0,
+      0, 0,
+      0, 0,
+      0, 0)
+
+    expect(rs.getNigiriScore(), '0 Egg Nigiri').to.equal(0)
+
+    rs.nigiriCards.eggNoWasabi = 1
+    expect(rs.getNigiriScore(), '1 Egg Nigiri No Wasabi 0 with Wasabi').to.equal(1)
+
+    rs.nigiriCards.eggNoWasabi = 0
+    rs.nigiriCards.eggWithWasabi = 1
+    expect(rs.getNigiriScore(), '0 Egg Nigiri No Wasabi 1 With Wasabi').to.equal(3)
+
+    rs.nigiriCards.eggNoWasabi = 1
+    rs.nigiriCards.eggWithWasabi = 1
+    expect(rs.getNigiriScore(), '1 Egg Nigiri No Wasabi 1 With Wasabi').to.equal(4)
+
+    rs.nigiriCards.eggNoWasabi = 3
+    rs.nigiriCards.eggWithWasabi = 3
+    expect(rs.getNigiriScore(), '3 Egg Nigiri No Wasabi 3 With Wasabi').to.equal(12)
+  })
+  it('Nigiri Score', () => {
+    let rs = new RoundScore(0, 0,
+      0, 0,
+      0,
+      1, 1,
+      1, 1,
+      1, 1)
+
+    expect(rs.getNigiriScore(), '1 of each Nigiri with and without').to.equal(24)
+  })
 })

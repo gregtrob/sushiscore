@@ -43,6 +43,10 @@ class RoundScore {
     return (Math.floor(this.tempuraCards / 2)) * 5
   }
 
+  getNigiriScore () {
+    return this.nigiriCards.getNigiriScore()
+  }
+
   getDumplingScore () {
     if (this.dumplingCards <= 0) {
       return 0
@@ -82,7 +86,7 @@ class NigiriCards {
     this.squidWithWasabi = squidWithWasabi
   }
 
-  getNigirScore () {
+  getNigiriScore () {
     // A squid nigiri scores 3 points. If it is on top of a
     // wasabi card it scores 9.
     // A salmon nigiri scores 2 points. If it is on top of
