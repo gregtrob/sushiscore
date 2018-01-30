@@ -108,21 +108,24 @@ const Scorer = {
     let firstPlaceArray = []
     let secondPlaceArray = []
 
-    for (let i = 0; i < roundScores; i++) {
+    for (let i = 0; i < roundScores.length; i++) {
       const currentMaki = roundScores[i].makiPoints
-
       if (currentMaki > firstPlaceScore) {
         // whatever was first is now second
         secondPlaceScore = firstPlaceScore
         secondPlaceArray = []
-        secondPlaceArray.concat(firstPlaceArray)
+        secondPlaceArray = secondPlaceArray.concat(firstPlaceArray)
 
         firstPlaceScore = currentMaki
         firstPlaceArray = []
         firstPlaceArray.push(roundScores[i])
+      } else if (currentMaki === firstPlaceScore && currentMaki !== 0) {
+        firstPlaceArray.push(roundScores[i])
       } else if (currentMaki > secondPlaceScore) {
         secondPlaceScore = currentMaki
         secondPlaceArray = []
+        secondPlaceArray.push(roundScores[i])
+      } else if (currentMaki === secondPlaceScore && currentMaki !== 0) {
         secondPlaceArray.push(roundScores[i])
       }
     }
@@ -132,10 +135,13 @@ const Scorer = {
       score.makiScore = makiFirstPoints
     })
 
-    let makiSecondPoints = Math.trunc(3 / secondPlaceArray.length)
-    firstPlaceArray.forEach(function (score) {
-      score.makiScore = makiSecondPoints
-    })
+    // if there are multiple 1st place we don't do anything about 2nd place
+    if (firstPlaceArray.length <= 1) {
+      let makiSecondPoints = Math.trunc(3 / secondPlaceArray.length)
+      secondPlaceArray.forEach(function (score) {
+        score.makiScore = makiSecondPoints
+      })
+    }
   },
 
   scoreGame (round1Scores, round2Scores, round3Scores) {
