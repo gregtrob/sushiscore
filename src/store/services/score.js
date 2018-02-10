@@ -1,3 +1,23 @@
+import uuid from 'uuid-random'
+
+class Player {
+  id = null
+  name = null
+  rs1 = null
+  rs2 = null
+  rs3 = null
+  puddingScore = 0
+
+  constructor (name = 'My name is what') {
+    this.name = name
+    this.id = uuid()
+  }
+
+  getGameScore () {
+    return this.rs1.getRoundScore() + this.rs2.getRoundScore() + this.rs3.getRoundScore() + this.puddingScore
+  }
+}
+
 class RoundScore {
   makiPoints = 0
   makiScore = 0
@@ -5,7 +25,6 @@ class RoundScore {
   sashimiCards = 0
   dumplingCards = 0
   puddingCards = 0
-  theScore = 0
   nigiriCards = null
 
   constructor (makiPoints = 0, tempuraCards = 0,
@@ -25,6 +44,7 @@ class RoundScore {
       squidNoWasabi, squidWithWasabi)
   }
 
+  // TODO: Add test cases for this
   getCardScore () {
     const tempuraScore = this.getTempuraScore()
     const sashimiScore = this.getSashimiScore()
@@ -64,6 +84,11 @@ class RoundScore {
     }
 
     return NaN
+  }
+
+  // TODO: add to testing
+  getRoundScore () {
+    return this.getCardScore() + this.makiScore
   }
 }
 
@@ -144,9 +169,116 @@ const Scorer = {
     }
   },
 
-  scoreGame (round1Scores, round2Scores, round3Scores) {
+  scoreGame (playerArray) {
+    // for pudding look for most and least
+    // if 2 player only look for most
 
+    let puddingHighScore = 0
+    let puddingLowScore = 100 // or use maxint
+    let puddingHighArray = []
+    let puddingLowArray = []
+    let allSame = false
+
+    // the presumption is that for each round the same player is in the same position in the array
+    // if we add player id later need to clean this up
+    for (let i = 0; i < playerArray.length; i++) {
+      const player = playerArray[i]
+      const currentpuddingScore = player.rs1.puddingCards + player.rs2.puddingCards + player.rs3.puddingCards
+      if (currentpuddingScore > puddingHighScore) {
+        puddingHighScore = currentpuddingScore
+        puddingHighArray.length = 0
+        puddingHighArray.push(player)
+      } else if (currentpuddingScore === puddingHighScore && currentpuddingScore !== 0) {
+        puddingHighArray.push(player)
+      }
+
+      if (currentpuddingScore < puddingLowScore) {
+        puddingLowScore = currentpuddingScore
+        puddingLowArray.length = 0
+        puddingLowArray.push(player)
+      } else if (currentpuddingScore === puddingLowScore) {
+        puddingLowArray.push(player)
+      }
+    }
+
+    if (puddingHighScore === puddingLowScore) {
+      allSame = true
+    }
+
+    if (!allSame) {
+      let puddingHighPoints = Math.trunc(6 / puddingHighArray.length)
+      puddingHighArray.forEach(function (player) {
+        player.puddingScore = puddingHighPoints
+      })
+
+      if (playerArray.length !== 2) {
+        let puddingLowPoints = Math.trunc(-6 / puddingLowArray.length)
+        puddingLowArray.forEach(function (player) {
+          player.puddingScore = puddingLowPoints
+        })
+      }
+    }
+
+    let placeArray = playerArray.slice(0)
+    placeArray.sort(function (a, b) {
+      return b.getGameScore() - a.getGameScore()
+    })
+
+    // do i return the array here OR do i return something like
+    // {
+    //  first: firstPlaceArray,
+    //  second: secondPlaceArray,
+    //  third: thirdPlaceArray,
+    //  full: playerArray
+    // }
+    // alternatives are to tag each user with their finish place? ....
+    let priorScore = -1
+    let place = 1
+    let places = {
+      first: [],
+      second: [],
+      third: [],
+      participantTrophy: []
+    }
+    let i = 0
+    for (; i < placeArray.length && place < 4; i++) {
+      let currentItem = placeArray[i]
+      let currentScore = currentItem.getGameScore()
+      // console.log('place is ' + place)
+      // console.log('prior is ' + priorScore)
+      // console.log('current is ' + currentScore)
+
+      if (priorScore === -1) {
+        priorScore = currentScore
+      }
+
+      if (priorScore === currentScore) {
+        if (place === 1) {
+          places.first.push(currentItem)
+        } else if (place === 2) {
+          places.second.push(currentItem)
+        } else if (place === 3) {
+          places.third.push(currentItem)
+        }
+      } else {
+        place++
+        if (place === 2) {
+          places.second.push(currentItem)
+        } else if (place === 3) {
+          places.third.push(currentItem)
+        }
+      }
+
+      priorScore = currentItem.getGameScore()
+    }
+    // console.log(places)
+    // console.log('i is ' + i)
+    if ((places.first.length + places.second.length + places.third.length) < playerArray.length) {
+      places.participantTrophy = placeArray.slice(i - 1)
+    }
+
+    return places
   }
 }
 
-export {RoundScore, NigiriCards, Scorer}
+export {RoundScore, NigiriCards, Scorer, Player}

@@ -9,7 +9,7 @@ function createMakiPoints (value) {
     0, 0)
 }
 
-describe('Scorer', () => {
+describe('Round Score', () => {
   it('Single Maki First and Second', () => {
     const rs1 = createMakiPoints(3)
     const rs2 = createMakiPoints(2)
@@ -86,6 +86,16 @@ describe('Scorer', () => {
     expect(rs6.makiScore, 'RS6').to.equal(0)
     expect(rs7.makiScore, 'RS7').to.equal(1)
     expect(rs8.makiScore, 'RS8').to.equal(0)
+
+    // console.log([rs1, rs2, rs3])
+    expect(rs1.getRoundScore(), 'RS1').to.equal(0)
+    expect(rs2.getRoundScore(), 'RS2').to.equal(1)
+    expect(rs3.getRoundScore(), 'RS3').to.equal(0)
+    expect(rs4.getRoundScore(), 'RS4').to.equal(6)
+    expect(rs5.getRoundScore(), 'RS5').to.equal(0)
+    expect(rs6.getRoundScore(), 'RS6').to.equal(0)
+    expect(rs7.getRoundScore(), 'RS7').to.equal(1)
+    expect(rs8.getRoundScore(), 'RS8').to.equal(0)
   })
   // first place not first in array
   it('First place not first', () => {
@@ -100,5 +110,4 @@ describe('Scorer', () => {
     expect(rs2.makiScore, 'RS2').to.equal(3)
     expect(rs3.makiScore, 'RS3').to.equal(6)
   })
-  
 })

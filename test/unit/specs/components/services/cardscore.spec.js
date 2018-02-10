@@ -1,6 +1,6 @@
 import {RoundScore} from '@/store/services/score'
 
-describe('Round Score', () => {
+describe('Card Score', () => {
   it('Dumpling Score', () => {
     let rs = new RoundScore(0, 0,
       0, 0,
@@ -172,5 +172,17 @@ describe('Round Score', () => {
       1, 1)
 
     expect(rs.getNigiriScore(), '1 of each Nigiri with and without').to.equal(24)
+  })
+  it('Card Score and Round Score', () => {
+    let rs = new RoundScore(1, 1,
+      1, 1,
+      1,
+      1, 1,
+      1, 1,
+      1, 1)
+    rs.makiScore = 1
+
+    expect(rs.getCardScore(), '1 of all').to.equal(25)
+    expect(rs.getRoundScore(), '1 of all + one Maki score').to.equal(26)
   })
 })
