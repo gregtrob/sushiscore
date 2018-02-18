@@ -1,19 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {RoundScore} from '@/store/services/score'
+import {Player} from '@/store/services/score'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    userScores: [
-      new RoundScore()
-    ],
     // switch to an array for this and utilize a forEach going through it
     // alternatively consider a backing map of the array with the "id" and the
     // array position
     // considering the expected max # of users an array should not be much of a perf hit
-    users: new Map([['1', {id: '1', name: 'Fred'}], ['6', {id: '6', name: 'Barney'}]])
+    players: []
   },
   mutations: {
     // setScoreForRound (state, payload) {
@@ -23,45 +20,60 @@ export const store = new Vuex.Store({
     // setUsername (state, payload) {
     //   console.log(payload)
     // },
+    init (state) {
+      state.players = new Map()
+    },
     addUser (state, payload) {
-      state.users.set(payload.id, payload)
+      state.players.set(payload.id, payload)
     },
     deleteUser (state, payload) {
       state.users.delete(payload.id)
     },
     changeUserName (state, payload) {
-      // let userVal = state.users.get(payload.id)
-      // userVal.name = payload.name
-      // console.log(state.users)
+      let player = null
+      if (payload.id) {
+        player = state.players.find(function isId (statePlayer) {
+          return statePlayer.id === payload.id
+        })
+      }
+      if (player) {
+        player.name = payload.name
+      } else {
+        console.log('Creating new player')
+        player = new Player(payload.name)
+        state.players.push(player)
+      }
+      payload.id = player.id
     }
   },
   actions: {
     addUser ({commit, getters}, payload) {
-      let theId = getters.users.size + 5
       let user = {
-        id: theId.toString(),
+        id: payload.id,
         name: payload
       }
       commit('addUser', user)
     },
     changeUserName ({commit}, payload) {
-      commit('deleteUser', payload)
-      commit('addUser', payload)
+      commit('changeUserName', payload)
+    },
+    init ({commit}) {
+      commit('init')
     }
 
   },
   getters: {
     getUser (state) {
-      // return 'Fred'
       return (userId) => {
-        if (state.users.has(userId.toString())) {
-          return state.users.get(userId.toString())
-        }
-        return 'Unknown'
+        let player = state.players.find(function isId (statePlayer) {
+          return statePlayer.id === userId
+        })
+
+        return player
       }
     },
     getUsers (state) {
-      return state.users
+      return state.players
     }
     // ,
     // getScoresForRound (state) {

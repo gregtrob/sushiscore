@@ -209,13 +209,10 @@ export default {
         squidWithWasabi: 0
       },
       puddingCards: 0,
-      // userId: '',
-      // roundId: 0,
       editMode: true,
       twoDigitMask: '##',
       scoreMode: true,
       userScore: null
-      // nigiriTypes: ['Squid', 'Salmon', 'Egg']
     }
   },
   computed: {
