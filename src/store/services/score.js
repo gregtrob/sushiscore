@@ -6,15 +6,48 @@ class Player {
   rs1 = null
   rs2 = null
   rs3 = null
-  puddingScore = 0
+  gameScore = null
 
   constructor (name = 'My name is what') {
     this.name = name
     this.id = uuid()
   }
 
-  getGameScore () {
-    return this.rs1.getRoundScore() + this.rs2.getRoundScore() + this.rs3.getRoundScore() + this.puddingScore
+  // TODO: add tests
+  getRoundScore (roundId) {
+    let rs = null
+    let intRoundId = parseInt(roundId)
+    if (intRoundId === 1) {
+      rs = this.rs1
+    } else if (intRoundId === 2) {
+      rs = this.rs2
+    } else if (intRoundId === 3) {
+      rs = this.rs3
+    }
+
+    if (rs) {
+      return rs
+    }
+
+    return null
+  }
+}
+
+class GameScore {
+  r1Score = 0
+  r2Score = 0
+  r3Score = 0
+  puddingScore = 0
+
+  constructor (r1Score = 0, r2Score = 0, r3Score = 0, puddingScore = 0) {
+    this.r1Score = r1Score
+    this.r2Score = r2Score
+    this.r3Score = r3Score
+    this.puddingScore = puddingScore
+  }
+
+  getTotal () {
+    return this.puddingScore + this.r1Score + this.r2Score + this.r3Score
   }
 }
 
@@ -25,7 +58,7 @@ class RoundScore {
   sashimiCards = 0
   dumplingCards = 0
   puddingCards = 0
-  nigiriCards = null
+  nigiriCards = new NigiriCards()
 
   constructor (makiPoints = 0, tempuraCards = 0,
     sashimiCards = 0, dumplingCards = 0,
@@ -39,7 +72,7 @@ class RoundScore {
     this.dumplingCards = dumplingCards
     this.puddingCards = puddingCards
 
-    this.nigiriCards = new NigiriCards(salmonNoWasabi, salmonWithWasabi,
+    this.nigiriCards.setAllValues(salmonNoWasabi, salmonWithWasabi,
       eggNoWasabi, eggWithWasabi,
       squidNoWasabi, squidWithWasabi)
   }
@@ -86,9 +119,17 @@ class RoundScore {
     return NaN
   }
 
-  // TODO: add to testing
-  getRoundScore () {
+  getTotal () {
     return this.getCardScore() + this.makiScore
+  }
+
+  clone () {
+    const rs = new RoundScore(this.makiPoints, this.tempuraCards, this.sashimiCards,
+      this.dumplingCards, this.puddingCards,
+      this.salmonNoWasabi, this.salmonWithWasabi,
+      this.eggNoWasabi, this.eggWithWasabi,
+      this.squidNoWasabi, this.squidWithWasabi)
+    return rs
   }
 }
 
@@ -101,6 +142,12 @@ class NigiriCards {
   squidWithWasabi=0
 
   constructor (salmonNoWasabi = 0, salmonWithWasabi = 0,
+    eggNoWasabi = 0, eggWithWasabi = 0,
+    squidNoWasabi = 0, squidWithWasabi = 0) {
+    this.setAllValues(salmonNoWasabi, salmonWithWasabi, eggNoWasabi, eggWithWasabi, this.squidNoWasabi, this.salmonWithWasabi)
+  }
+
+  setAllValues (salmonNoWasabi = 0, salmonWithWasabi = 0,
     eggNoWasabi = 0, eggWithWasabi = 0,
     squidNoWasabi = 0, squidWithWasabi = 0) {
     this.salmonNoWasabi = salmonNoWasabi
@@ -184,6 +231,12 @@ const Scorer = {
     for (let i = 0; i < playerArray.length; i++) {
       const player = playerArray[i]
       const currentpuddingScore = player.rs1.puddingCards + player.rs2.puddingCards + player.rs3.puddingCards
+      const gs = new GameScore(player.rs1.getTotal(),
+        player.rs2.getTotal(),
+        player.rs3.getTotal(),
+        0)
+      player.gameScore = gs
+
       if (currentpuddingScore > puddingHighScore) {
         puddingHighScore = currentpuddingScore
         puddingHighArray.length = 0
@@ -208,20 +261,20 @@ const Scorer = {
     if (!allSame) {
       let puddingHighPoints = Math.trunc(6 / puddingHighArray.length)
       puddingHighArray.forEach(function (player) {
-        player.puddingScore = puddingHighPoints
+        player.gameScore.puddingScore = puddingHighPoints
       })
 
       if (playerArray.length !== 2) {
         let puddingLowPoints = Math.trunc(-6 / puddingLowArray.length)
         puddingLowArray.forEach(function (player) {
-          player.puddingScore = puddingLowPoints
+          player.gameScore.puddingScore = puddingLowPoints
         })
       }
     }
 
     let placeArray = playerArray.slice(0)
     placeArray.sort(function (a, b) {
-      return b.getGameScore() - a.getGameScore()
+      return b.gameScore.getTotal() - a.gameScore.getTotal()
     })
 
     // do i return the array here OR do i return something like
@@ -243,11 +296,7 @@ const Scorer = {
     let i = 0
     for (; i < placeArray.length && place < 4; i++) {
       let currentItem = placeArray[i]
-      let currentScore = currentItem.getGameScore()
-      // console.log('place is ' + place)
-      // console.log('prior is ' + priorScore)
-      // console.log('current is ' + currentScore)
-
+      let currentScore = currentItem.gameScore.getTotal()
       if (priorScore === -1) {
         priorScore = currentScore
       }
@@ -269,7 +318,7 @@ const Scorer = {
         }
       }
 
-      priorScore = currentItem.getGameScore()
+      priorScore = currentItem.gameScore.getTotal()
     }
     // console.log(places)
     // console.log('i is ' + i)

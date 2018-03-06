@@ -183,6 +183,6 @@ describe('Card Score', () => {
     rs.makiScore = 1
 
     expect(rs.getCardScore(), '1 of all').to.equal(25)
-    expect(rs.getRoundScore(), '1 of all + one Maki score').to.equal(26)
+    expect(rs.getTotal(), '1 of all + one Maki score').to.equal(26)
   })
 })

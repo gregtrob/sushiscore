@@ -22,9 +22,4 @@ new Vue({
   store,
   template: '<App/>',
   components: { App }
-  // ,
-  // created () {
-  //   // initialize store data structure by submitting action.
-  //   this.$store.dispatch('init')
-  // }
 })

@@ -20,9 +20,6 @@ export const store = new Vuex.Store({
     // setUsername (state, payload) {
     //   console.log(payload)
     // },
-    init (state) {
-      state.players = new Map()
-    },
     addUser (state, payload) {
       state.players.set(payload.id, payload)
     },
@@ -39,7 +36,6 @@ export const store = new Vuex.Store({
       if (player) {
         player.name = payload.name
       } else {
-        console.log('Creating new player')
         player = new Player(payload.name)
         state.players.push(player)
       }
@@ -56,11 +52,7 @@ export const store = new Vuex.Store({
     },
     changeUserName ({commit}, payload) {
       commit('changeUserName', payload)
-    },
-    init ({commit}) {
-      commit('init')
     }
-
   },
   getters: {
     getUser (state) {

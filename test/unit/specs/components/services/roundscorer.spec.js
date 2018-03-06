@@ -88,14 +88,14 @@ describe('Round Score', () => {
     expect(rs8.makiScore, 'RS8').to.equal(0)
 
     // console.log([rs1, rs2, rs3])
-    expect(rs1.getRoundScore(), 'RS1').to.equal(0)
-    expect(rs2.getRoundScore(), 'RS2').to.equal(1)
-    expect(rs3.getRoundScore(), 'RS3').to.equal(0)
-    expect(rs4.getRoundScore(), 'RS4').to.equal(6)
-    expect(rs5.getRoundScore(), 'RS5').to.equal(0)
-    expect(rs6.getRoundScore(), 'RS6').to.equal(0)
-    expect(rs7.getRoundScore(), 'RS7').to.equal(1)
-    expect(rs8.getRoundScore(), 'RS8').to.equal(0)
+    expect(rs1.getTotal(), 'RS1').to.equal(0)
+    expect(rs2.getTotal(), 'RS2').to.equal(1)
+    expect(rs3.getTotal(), 'RS3').to.equal(0)
+    expect(rs4.getTotal(), 'RS4').to.equal(6)
+    expect(rs5.getTotal(), 'RS5').to.equal(0)
+    expect(rs6.getTotal(), 'RS6').to.equal(0)
+    expect(rs7.getTotal(), 'RS7').to.equal(1)
+    expect(rs8.getTotal(), 'RS8').to.equal(0)
   })
   // first place not first in array
   it('First place not first', () => {

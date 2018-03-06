@@ -1,52 +1,27 @@
 <template>
   <v-container fluid>
-
-         <v-card>
+    <v-card>
+      <v-layout v-if="inEditMode">
           <v-card-text>
-            <v-layout v-if="inEditMode">
               <v-form >
                 <v-text-field label="User name"
                                 v-model="newUserName"
                                 style="display: inline-block"
+                                class="text-md-center"
                                 required>
                 </v-text-field>
               </v-form>
-              <v-card-actions>
-                <v-btn color="primary" @click="submitNameChange">OK</v-btn>
-              </v-card-actions>
-            </v-layout>
-
-          <div class="text-xs-center v-align-center display-1" v-else>
-            User {{ theUserName }} 
-            <v-btn  v-on:click="setEditMode()"><v-icon style="vertical-align:middle">edit</v-icon></v-btn>
-          </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="primary" @click="submitNameChange">OK</v-btn>
+            </v-card-actions>
+        </v-layout>
+          <v-card-text v-else>
+              <div class="headline text-md-center">User {{ theUserName }}
+              <v-btn  v-on:click="setEditMode()" x-small><v-icon small>edit</v-icon></v-btn></div>
           </v-card-text>
-        </v-card>
-
-
-
-    
-    <!-- <v-layout row justify-center>
-      <v-flex xs4>
-        <div class="text-xs-center v-align-center" v-if="inEditMode">
-          <v-form>
-           <v-text-field label="User name"
-                          v-model="newUserName"
-                          required>
-           </v-text-field>
-           <v-btn @click="submitNameChange">OK</v-btn>
-          </v-form>
-          <span class="display-1">In edit mode - User {{ theUserName }} - {{ userId }}</span> 
-          <v-btn  v-on:click="setEditMode()"><v-icon style="vertical-align:middle">edit</v-icon></v-btn>
-        </div>
-        <div class="text-xs-center v-align-center" v-else>
-          <span class="display-1">User {{ theUserName }} - User Id {{ userId }}</span>
-          <v-btn  v-on:click="setEditMode()"><v-icon style="vertical-align:middle">edit</v-icon></v-btn>
-        </div>
-      </v-flex>
-    </v-layout> -->
+    </v-card>
   </v-container>
-
 </template>
 
 <script>

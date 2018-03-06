@@ -38,10 +38,10 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 21').to.equal(21) // 15 + 6 pudding points
-    expect(barney.getGameScore(), 'Barney 12').to.equal(12) // 12
-    expect(wilma.getGameScore(), 'Wilma 13').to.equal(9) // 9
-    expect(betty.getGameScore(), 'Betty 0').to.equal(0) // 6 - 6
+    expect(fred.gameScore.getTotal(), 'Fred 21').to.equal(21) // 15 + 6 pudding points
+    expect(barney.gameScore.getTotal(), 'Barney 12').to.equal(12) // 12
+    expect(wilma.gameScore.getTotal(), 'Wilma 13').to.equal(9) // 9
+    expect(betty.gameScore.getTotal(), 'Betty 0').to.equal(0) // 6 - 6
 
     // confirm playerArra is not shuffled
     expect(playerArray[0].id, 'Wilma in zero').to.equal(wilma.id)
@@ -67,8 +67,8 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 21').to.equal(21) // 15 + 6 pudding points
-    expect(betty.getGameScore(), 'Betty 0').to.equal(6) // 6
+    expect(fred.gameScore.getTotal(), 'Fred 21').to.equal(21) // 15 + 6 pudding points
+    expect(betty.gameScore.getTotal(), 'Betty 0').to.equal(6) // 6
 
     // add checks to be sure first is in position 0 and last is in last place
     expect(places.first.length, 'First place should be 1 entry').to.equal(1)
@@ -90,10 +90,10 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 21').to.equal(15) // 15 pudding points
-    expect(barney.getGameScore(), 'Barney 12').to.equal(12) // 12
-    expect(wilma.getGameScore(), 'Wilma 9').to.equal(9) // 9
-    expect(betty.getGameScore(), 'Betty 0').to.equal(6) // 6
+    expect(fred.gameScore.getTotal(), 'Fred 21').to.equal(15) // 15 pudding points
+    expect(barney.gameScore.getTotal(), 'Barney 12').to.equal(12) // 12
+    expect(wilma.gameScore.getTotal(), 'Wilma 9').to.equal(9) // 9
+    expect(betty.gameScore.getTotal(), 'Betty 0').to.equal(6) // 6
 
     // add checks to be sure first is in position 0 and last is in last place
     expect(places.first.length, 'First place should be 1 entry').to.equal(1)
@@ -115,10 +115,10 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 18').to.equal(18) // 15 + 3 pudding
-    expect(barney.getGameScore(), 'Barney 18').to.equal(18) // 15 + 3 pudding
-    expect(wilma.getGameScore(), 'Wilma 9').to.equal(9) // 15
-    expect(betty.getGameScore(), 'Betty 0').to.equal(0) // 6 - 6 pudding
+    expect(fred.gameScore.getTotal(), 'Fred 18').to.equal(18) // 15 + 3 pudding
+    expect(barney.gameScore.getTotal(), 'Barney 18').to.equal(18) // 15 + 3 pudding
+    expect(wilma.gameScore.getTotal(), 'Wilma 9').to.equal(9) // 15
+    expect(betty.gameScore.getTotal(), 'Betty 0').to.equal(0) // 6 - 6 pudding
 
     // add checks to be sure first is in position 0 and last is in last place
     expect(places.first.length, 'First place should be 2 entry').to.equal(2)
@@ -140,10 +140,10 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 18').to.equal(18) // 15 + 3 pudding
-    expect(barney.getGameScore(), 'Barney 18').to.equal(18) // 15 + 3 pudding
-    expect(wilma.getGameScore(), 'Wilma 9').to.equal(6) // 9 - 3
-    expect(betty.getGameScore(), 'Betty 9').to.equal(6) // 9 - 3
+    expect(fred.gameScore.getTotal(), 'Fred 18').to.equal(18) // 15 + 3 pudding
+    expect(barney.gameScore.getTotal(), 'Barney 18').to.equal(18) // 15 + 3 pudding
+    expect(wilma.gameScore.getTotal(), 'Wilma 9').to.equal(6) // 9 - 3
+    expect(betty.gameScore.getTotal(), 'Betty 9').to.equal(6) // 9 - 3
 
     // add checks to be sure first is in position 0 and last is in last place
     expect(places.first.length, 'First place should be 2 entry').to.equal(2)
@@ -169,14 +169,14 @@ describe('Game Scorer', () => {
 
     let places = Scorer.scoreGame(playerArray)
 
-    expect(fred.getGameScore(), 'Fred 18').to.equal(18)
-    expect(barney.getGameScore(), 'Barney 18').to.equal(18)
-    expect(wilma.getGameScore(), 'Wilma 10').to.equal(10)
-    expect(betty.getGameScore(), 'Betty 9').to.equal(9)
-    expect(george.getGameScore(), 'George 6').to.equal(6)
-    expect(jane.getGameScore(), 'Jane 14').to.equal(14)
-    expect(judy.getGameScore(), 'Judy 11').to.equal(11)
-    expect(elroy.getGameScore(), 'Elroy 10').to.equal(10)
+    expect(fred.gameScore.getTotal(), 'Fred 18').to.equal(18)
+    expect(barney.gameScore.getTotal(), 'Barney 18').to.equal(18)
+    expect(wilma.gameScore.getTotal(), 'Wilma 10').to.equal(10)
+    expect(betty.gameScore.getTotal(), 'Betty 9').to.equal(9)
+    expect(george.gameScore.getTotal(), 'George 6').to.equal(6)
+    expect(jane.gameScore.getTotal(), 'Jane 14').to.equal(14)
+    expect(judy.gameScore.getTotal(), 'Judy 11').to.equal(11)
+    expect(elroy.gameScore.getTotal(), 'Elroy 10').to.equal(10)
 
     // add checks to be sure first is in position 0 and last is in last place
     expect(places.first.length, 'First place should be 2 entry').to.equal(2)
