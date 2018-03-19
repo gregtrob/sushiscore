@@ -1,194 +1,162 @@
 <template>
-<!-- Wrap all this in a card -->
-    <v-container
-      fluid
-    >
-
-    <v-card>
-  
+  <v-card>
     <v-card-title primary-title>
       <v-layout row justify-center>
           <h4 class="text-md-center">Round {{ roundId }} score</h4>
       </v-layout>
     </v-card-title>
+    <v-card-text v-if="scoreMode" justify-center>
+      <div v-if="userHasScore">
+        <div class="text-md-center">Your score for the round was {{ roundScore.getTotal() }}.  You had {{ roundScore.makiPoints }} maki points.  You had {{ roundScore.puddingCards }} pudding cards.</div>          
+      </div>
+      <div v-else>
+        No score yet
+      </div>
+    </v-card-text>
+    <v-card-text else>
+        <v-layout row wrap>
+          <v-container xs3 fluid>
+            <v-form @submit.prevent="handleSubmit">
+              <v-layout row wrap>
+                <v-flex xs6>
+                  <v-text-field
+                    name="makiPoints"
+                    label="Maki Points"
+                    id="makiPoints"
+                    v-model.number="roundScore.makiPoints"
+                    type="number"
+                    :mask="twoDigitMask"
+                    >
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                  <v-text-field
+                    name="tempuraCards"
+                    label="Tempura Cards"
+                    id="tempuraCards"
+                    v-model.number="roundScore.tempuraCards"
+                    type="number"
+                    :mask="twoDigitMask"                
+                    >
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                  <v-text-field
+                    name="sashimiCards"
+                    label="Sashimi Cards"
+                    id="sashimiCards"
+                    v-model.number="roundScore.sashimiCards"
+                    type="number"
+                    :mask="twoDigitMask">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                  <v-text-field
+                    name="dumplingCards"
+                    label="Dumpling Cards"
+                    id="dumplingCards"
+                    v-model.number="roundScore.dumplingCards"
+                    type="number"
+                    :mask="twoDigitMask">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12 s6 justify-center>
+                    <v-subheader class="no-gap">Salmon Nigiri</v-subheader>
+                </v-flex>
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="salmonNigiriNoWasabi"
+                    label="No Wasabi"
+                    id="salmonNigiriNoWasabi"
+                    v-model.number="roundScore.nigiriCards.salmonNoWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="salmonNigiriWithWasabi"
+                    label="With Wasabi"
+                    id="salmonNigiriWithWasabi"
+                    v-model.number="roundScore.nigiriCards.salmonWithWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs12 s6 justify-center>
+                    <v-subheader class="no-gap">Egg Nigiri</v-subheader>
+                </v-flex>
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="eggNigiriNoWasabi"
+                    label="No Wasabi"
+                    id="eggNigiriNoWasabi"
+                    v-model.number="roundScore.nigiriCards.eggNoWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="eggNigiriWithWasabi"
+                    label="With Wasabi"
+                    id="eggNigiriWithWasabi"
+                    v-model.number="roundScore.nigiriCards.eggWithWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs12 s6 justify-center>
+                    <v-subheader class="no-gap">Squid Nigiri</v-subheader>
+                </v-flex>
 
-  <template v-if="scoreMode">
-    <v-layout row justify-center>
-      <v-card-text>
-        <div v-if="userHasScore">
-          <div class="text-md-center">Your score for the round was {{ roundScore.getTotal() }}.  You had {{ roundScore.makiPoints }} maki points.  You had {{ roundScore.puddingCards }} pudding cards.</div>          
-        </div>
-        <div v-else>
-          No score yet
-        </div>
-      </v-card-text>
-    </v-layout>
-  </template>
-
-  <template v-else>
-
-            <v-card>
-            <v-card-text>
-                <v-layout row wrap >
-                    <v-container xs3 fluid>
-                           <v-form ref="form">
-                                <v-layout row wrap>
-                                    <v-flex xs3 v-for="option in selectOptions" :key="option.text">
-                                         <v-text-field :label="option.text" :value="option.value"></v-text-field>
-                                    </v-flex> 
-                                    <v-flex xs3>
-                                         <v-btn small dark class="primary">save</v-btn>
-                                    </v-flex>             
-                                </v-layout>                    
-                        </v-form>
-                    </v-container>
-                </v-layout>
-                </v-card-text>
-                </v-card>
-
-      <v-card-text>
-        <v-form>
-          <v-layout row wrap justify-center>
-              <v-flex xs3>
-                <v-text-field
-                name="makiPoints"
-                label="Maki Points"
-                id="makiPoints"
-                v-model="roundScore.makiPoints"
-                :mask="twoDigitMask"
-                >
-              </v-text-field>
-              <v-text-field
-                name="tempuraCards"
-                label="Tempura Cards"
-                id="tempuraCards"
-                v-model="roundScore.tempuraCards"
-                :mask="twoDigitMask"                
-                >
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-
-
-          <v-layout row justify-center>
-              <v-flex xs2>
-                <v-text-field
-                name="sashimiCards"
-                label="Sashimi Cards"
-                id="sashimiCards"
-                v-model="roundScore.sashimiCards"
-                :mask="twoDigitMask">
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-
-          <v-layout row justify-center>
-              <v-flex xs2>
-                <v-text-field
-                name="dumplingCards"
-                label="Dumpling Cards"
-                id="dumplingCards"
-                v-model="roundScore.dumplingCards"
-                :mask="twoDigitMask">
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-
-        <v-layout row justify-center>
-          <v-flex xs2>
-              <v-list class="no-gap"> 
-                <v-subheader class="no-gap">Salmon Nigiri</v-subheader>
-                <v-text-field
-                name="salmonNigiriNoWasabi"
-                label="No Wasabi"
-                id="salmonNigiriNoWasabi"
-                v-model="roundScore.nigiriCards.salmonNoWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-                <v-text-field
-                name="salmonNigiriWithWasabi"
-                label="With Wasabi"
-                id="salmonNigiriWithWasabi"
-                v-model="roundScore.nigiriCards.salmonWithWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-              </v-list>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row justify-center>
-          <v-flex xs2>
-              <v-list class="no-gap"> 
-                <v-subheader class="no-gap">Egg Nigiri</v-subheader>
-                <v-text-field
-                name="eggNigiriNoWasabi"
-                label="No Wasabi"
-                id="eggNigiriNoWasabi"
-                v-model="roundScore.nigiriCards.eggNoWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-                <v-text-field
-                name="eggNigiriWithWasabi"
-                label="With Wasabi"
-                id="eggNigiriWithWasabi"
-                v-model="roundScore.nigiriCards.eggWithWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-              </v-list>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row justify-center>
-          <v-flex xs2>
-              <v-list class="no-gap"> 
-                <v-subheader class="no-gap">Squid Nigiri</v-subheader>
-                <v-text-field
-                name="squidNigiriNoWasabi"
-                label="No Wasabi"
-                id="squidNigiriNoWasabi"
-                v-model="roundScore.nigiriCards.squidNoWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-                <v-text-field
-                name="squidNigiriWithWasabi"
-                label="With Wasabi"
-                id="squidNigiriWithWasabi"
-                v-model="roundScore.nigiriCards.squidWithWasabi"
-                :mask="twoDigitMask">
-                </v-text-field>
-              </v-list>
-          </v-flex>
-        </v-layout> 
-
-          <v-layout row justify-center>
-              <v-flex xs2>
-                <v-text-field
-                name="puddingCards"
-                label="Pudding Cards"
-                id="Pudding Cards"
-                v-model="roundScore.puddingCards"
-                :mask="twoDigitMask">
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-
-        <v-layout row justify-center>
-          <v-flex xs2>
-            <v-btn>Submit</v-btn>
-          </v-flex>
-        </v-layout>
-
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="squidNigiriNoWasabi"
+                    label="No Wasabi"
+                    id="squidNigiriNoWasabi"
+                    v-model.number="roundScore.nigiriCards.squidNoWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                    <v-text-field
+                    name="squidNigiriWithWasabi"
+                    label="With Wasabi"
+                    id="squidNigiriWithWasabi"
+                    v-model.number="roundScore.nigiriCards.squidWithWasabi"
+                    type="number"
+                    :mask="twoDigitMask">
+                    </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>                  
+                  <v-text-field
+                  name="puddingCards"
+                  label="Pudding Cards"
+                  id="Pudding Cards"
+                  v-model.number="roundScore.puddingCards"
+                  type="number"
+                  :mask="twoDigitMask">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs6 s3>
+                  <v-btn color="primary" type="submit">Submit</v-btn>
+                </v-flex>
+          </v-layout> 
         </v-form>
-      </v-card-text>
-  </template>
-  
-    </v-card>
-</v-container>
-
+      </v-container>
+      </v-layout>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import { Player, RoundScore } from '@/store/services/score'
+
+function checkNumber (value) {
+  return Number.isInteger(value)
+}
 
 export default {
   props: ['userId', 'roundId', 'updateMode'],
@@ -198,23 +166,23 @@ export default {
       twoDigitMask: '##',
       thePlayer: null,
       roundScore: null,
-      selectOptions: [
-        {text: 'Apples', value: 'apple'},
-        {text: 'Oranges', value: 'orange'},
-        {text: 'Grapes', value: 'grape'},
-        {text: 'Banana', value: 'banana'},
-        {text: 'Strawberry', value: 'strawberry'},
-        {text: 'Kiwi', value: 'kiwi'},
-        {text: 'Lime', value: 'lime'},
-        {text: 'Lemon', value: 'lemon'},
-        {text: 'Cucumber', value: 'Cucumber'},
-        {text: 'Tomato', value: 'Tomato'},
-        {text: 'Durian', value: 'durian'},
-        {text: 'Blueberry', value: 'blueberry'},
-        {text: 'Cherry', value: 'cherry'},
-        {text: 'Blackberry', value: 'blackberry'}
+      // selectOptions: [
+      //   {text: 'Apples', value: 'apple'},
+      //   {text: 'Oranges', value: 'orange'},
+      //   {text: 'Grapes', value: 'grape'},
+      //   {text: 'Banana', value: 'banana'},
+      //   {text: 'Strawberry', value: 'strawberry'},
+      //   {text: 'Kiwi', value: 'kiwi'},
+      //   {text: 'Lime', value: 'lime'},
+      //   {text: 'Lemon', value: 'lemon'},
+      //   {text: 'Cucumber', value: 'Cucumber'},
+      //   {text: 'Tomato', value: 'Tomato'},
+      //   {text: 'Durian', value: 'durian'},
+      //   {text: 'Blueberry', value: 'blueberry'},
+      //   {text: 'Cherry', value: 'cherry'},
+      //   {text: 'Blackberry', value: 'blackberry'}
 
-      ],
+      // ],
       theUserId: this.userId
     }
   },
@@ -224,8 +192,7 @@ export default {
         return true
       }
 
-      // return true
-      return false
+      return true
     },
     userHasScore () {
       const player = this.getPlayer()
@@ -288,6 +255,58 @@ export default {
       console.log('Getting fs')
       console.log(rs)
       return rs
+    },
+    handleSubmit: function () {
+      console.log('Here I am')
+      console.log(this.roundScore)
+      const localRS = this.roundScore
+      if (!checkNumber(localRS.makiPoints)) {
+        localRS.makiPoints = 0
+      }
+      if (!checkNumber(localRS.tempuraCards)) {
+        localRS.tempuraCards = 0
+      }
+      if (!checkNumber(localRS.sashimiCards)) {
+        localRS.sashimiCards = 0
+      }
+      if (!checkNumber(localRS.dumplingCards)) {
+        localRS.dumplingCards = 0
+      }
+      if (!checkNumber(localRS.puddingCards)) {
+        localRS.puddingCards = 0
+      }
+
+      const nc = localRS.nigiriCards
+      if (!checkNumber(nc.salmonNoWasabi)) {
+        localRS.salmonNoWasabi = 0
+      }
+      if (!checkNumber(nc.salmonWithWasabi)) {
+        localRS.salmonWithWasabi = 0
+      }
+      if (!checkNumber(nc.eggNoWasabi)) {
+        localRS.eggNoWasabi = 0
+      }
+      if (!checkNumber(nc.eggWithWasabi)) {
+        localRS.eggWithWasabi = 0
+      }
+      if (!checkNumber(nc.squidNoWasabi)) {
+        localRS.squidNoWasabi = 0
+      }
+      if (!checkNumber(nc.squidWithWasabi)) {
+        localRS.squidWithWasabi = 0
+      }
+
+      localRS.nigiriCards = nc
+      localRS.getTotal()
+      // TODO: Dispath and set
+      const payload = {
+        id: this.getPlayer().id,
+        roundId: this.roundId,
+        rs: localRS
+      }
+
+      this.updateMode = false
+      this.$store.dispatch('setScoreForRound', payload)
     }
   },
   created () {

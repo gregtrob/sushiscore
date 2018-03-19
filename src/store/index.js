@@ -13,8 +13,45 @@ export const store = new Vuex.Store({
     players: []
   },
   mutations: {
-    // setScoreForRound (state, payload) {
-    // },
+    setScoreForRound (state, payload) {
+      console.log(payload)
+
+      // I think if you find the player then you must remove them from the array
+      // then update it at the end
+      let player = null
+      if (payload.id) {
+        // console.log('In payload.id')
+        player = state.players.find(function isId (statePlayer) {
+          const val = statePlayer.id === payload.id
+          // console.log(val)
+          // console.log('State Player' + statePlayer)
+          return val
+        })
+      }
+
+      // console.log(player)
+      if (!player) {
+        player = new Player()
+        state.players.push(player)
+      }
+
+      console.log(state.players)
+      console.log('Round id is ' + payload.roundId)
+      console.log(typeof (payload.roundId))
+      if (payload.roundId === '1') {
+        console.log('Rs1')
+        player.rs1 = payload.rs
+      } else if (payload.roundId === '2') {
+        console.log('Rs2')
+        player.rs2 = payload.rs
+      } else if (payload.roundId === '3') {
+        console.log('Rs3')
+        player.rs3 = payload.rs
+      }
+
+      console.log('Here')
+      console.log(state.players)
+    },
     // setEndOfGameScore (state, payload) {
     // },
     // setUsername (state, payload) {
@@ -52,6 +89,9 @@ export const store = new Vuex.Store({
     },
     changeUserName ({commit}, payload) {
       commit('changeUserName', payload)
+    },
+    setScoreForRound ({commit, getters}, payload) {
+      commit('setScoreForRound', payload)
     }
   },
   getters: {
