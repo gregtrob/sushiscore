@@ -5,15 +5,19 @@ import App from './App'
 import router from './router'
 import {store} from './store'
 import Vuetify from 'vuetify'
-import Round from './components/Scorecard/Round'
+import DisplayScoreForRound from './components/Scorecard/DisplayScoreForRound'
+import EnterScoreForRound from './components/Scorecard/EnterScoreForRound'
 import User from './components/Scorecard/User'
+import PlayerRound from './components/PlayerRound'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
-Vue.component('round-score', Round)
+Vue.component('display-round-score', DisplayScoreForRound)
+Vue.component('enter-round-score', EnterScoreForRound)
 Vue.component('user', User)
+Vue.component('player-round', PlayerRound)
 
 /* eslint-disable no-new */
 new Vue({

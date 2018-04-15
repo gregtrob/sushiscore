@@ -1,19 +1,11 @@
 <template>
-  <v-card>
+  <v-container fluid>
     <v-card-title primary-title>
       <v-layout row justify-center>
           <h4 class="text-md-center">Round {{ roundId }} score</h4>
       </v-layout>
     </v-card-title>
-    <v-card-text v-if="scoreMode" justify-center>
-      <div v-if="userHasScore">
-        <div class="text-md-center">Your score for the round was {{ roundScore.getTotal() }}.  You had {{ roundScore.makiPoints }} maki points.  You had {{ roundScore.puddingCards }} pudding cards.</div>          
-      </div>
-      <div v-else>
-        No score yet
-      </div>
-    </v-card-text>
-    <v-card-text else>
+    <v-card-text>
         <v-layout row wrap>
           <v-container xs3 fluid>
             <v-form @submit.prevent="handleSubmit">
@@ -148,11 +140,11 @@
       </v-container>
       </v-layout>
     </v-card-text>
-  </v-card>
+  </v-container>
 </template>
 
 <script>
-import { Player, RoundScore } from '@/store/services/score'
+import { RoundScore } from '@/store/services/score'
 
 function checkNumber (value) {
   return Number.isInteger(value)
@@ -166,23 +158,6 @@ export default {
       twoDigitMask: '##',
       thePlayer: null,
       roundScore: null,
-      // selectOptions: [
-      //   {text: 'Apples', value: 'apple'},
-      //   {text: 'Oranges', value: 'orange'},
-      //   {text: 'Grapes', value: 'grape'},
-      //   {text: 'Banana', value: 'banana'},
-      //   {text: 'Strawberry', value: 'strawberry'},
-      //   {text: 'Kiwi', value: 'kiwi'},
-      //   {text: 'Lime', value: 'lime'},
-      //   {text: 'Lemon', value: 'lemon'},
-      //   {text: 'Cucumber', value: 'Cucumber'},
-      //   {text: 'Tomato', value: 'Tomato'},
-      //   {text: 'Durian', value: 'durian'},
-      //   {text: 'Blueberry', value: 'blueberry'},
-      //   {text: 'Cherry', value: 'cherry'},
-      //   {text: 'Blackberry', value: 'blackberry'}
-
-      // ],
       theUserId: this.userId
     }
   },
@@ -213,52 +188,40 @@ export default {
     scoreForRound () {
       this.getRoundScore().getTotal()
     }
-    // ,
-    // makiPoints: {
-    //   get () {
-    //     return this.roundScore.makiPoints
-    //   },
-    //   set (v) {
-    //     // console.log('setting value')
-    //     this.roundScore.makiPoints = v
-    //     // console.log('value set')
-    //   }
-    // }
   },
   methods: {
     getPlayer: function () {
       if (this.thePlayer) {
-        // console.log('Found right away')
         return this.thePlayer
       }
       let player = this.$store.getters.getUser(this.theUserId)
-      if (!player) {
-        player = new Player()
-        player.rs1 = new RoundScore()
-        player.rs1.makiPoints = 5
-        player.rs1.puddingCards = 1
-        player.rs1.sashimiCards = 10
-      }
+      // if (!player) {
+      //   player = new Player()
+      //   player.rs1 = new RoundScore()
+      //   player.rs1.makiPoints = 5
+      //   player.rs1.puddingCards = 1
+      //   player.rs1.sashimiCards = 10
+      // }
       this.thePlayer = player
       // console.log(this.thePlayer)
       return this.thePlayer
       // return this.$store.getters.getUser(this.userId)
     },
     getRoundScore: function () {
-      console.log(this.getPlayer())
+      // console.log(this.getPlayer())
       let rs = this.getPlayer().getRoundScore(this.roundId)
       console.log(rs)
       if (!rs) {
         console.log('RS did not already exist')
         rs = new RoundScore()
       }
-      console.log('Getting fs')
-      console.log(rs)
+      // console.log('Getting fs')
+      // console.log(rs)
       return rs
     },
     handleSubmit: function () {
-      console.log('Here I am')
-      console.log(this.roundScore)
+      // console.log('Here I am')
+      // console.log(this.roundScore)
       const localRS = this.roundScore
       if (!checkNumber(localRS.makiPoints)) {
         localRS.makiPoints = 0
@@ -298,7 +261,6 @@ export default {
 
       localRS.nigiriCards = nc
       localRS.getTotal()
-      // TODO: Dispath and set
       const payload = {
         id: this.getPlayer().id,
         roundId: this.roundId,
@@ -311,7 +273,6 @@ export default {
   },
   created () {
     const rs = this.getRoundScore()
-    // TODO: Add null check if null create a blank one
     if (!rs) {
       this.roundScore = new RoundScore()
     }

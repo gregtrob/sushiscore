@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    <v-card>
       <v-layout v-if="inEditMode">
           <v-card-text>
               <v-form >
@@ -8,7 +7,8 @@
                                 v-model="newUserName"
                                 style="display: inline-block"
                                 class="text-md-center"
-                                required>
+                                required
+                                :rules="[rules.required]">
                 </v-text-field>
               </v-form>
             </v-card-text>
@@ -20,7 +20,6 @@
               <div class="headline text-md-center">User {{ theUserName }}
               <v-btn  v-on:click="setEditMode()" x-small><v-icon small>edit</v-icon></v-btn></div>
           </v-card-text>
-    </v-card>
   </v-container>
 </template>
 
@@ -32,8 +31,11 @@ export default {
       // Pass Id, Edit mode, If edit mode is "true" then "new"?  Does that make sense?
       // If id is undefined then call a method on the store to create a new user
       newUserName: this.theUserName,
-      nameEditMode: this.thisParentEditMode,
-      internalId: this.userId
+      nameEditMode: this.parentEditMode,
+      internalId: this.userId,
+      rules: {
+        required: (value) => !!value || 'Required.'
+      }
     }
   },
   computed: {
@@ -55,6 +57,10 @@ export default {
       this.nameEditMode = !this.nameEditMode
     },
     submitNameChange () {
+      // if (length(this.newUserName.trim()) === 0) {
+      //   return false
+      // }
+
       let payload = {
         id: this.internalId,
         name: this.newUserName

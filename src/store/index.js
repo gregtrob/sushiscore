@@ -10,7 +10,8 @@ export const store = new Vuex.Store({
     // alternatively consider a backing map of the array with the "id" and the
     // array position
     // considering the expected max # of users an array should not be much of a perf hit
-    players: []
+    players: [],
+    inProgress: false
   },
   mutations: {
     setScoreForRound (state, payload) {
@@ -35,21 +36,17 @@ export const store = new Vuex.Store({
         state.players.push(player)
       }
 
-      console.log(state.players)
-      console.log('Round id is ' + payload.roundId)
-      console.log(typeof (payload.roundId))
-      if (payload.roundId === '1') {
-        console.log('Rs1')
+      // console.log(state.players)
+      // console.log('Round id is ' + payload.roundId)
+      // console.log(typeof (payload.roundId))
+      const stringRoundId = payload.roundId.toString()
+      if (stringRoundId === '1') {
         player.rs1 = payload.rs
-      } else if (payload.roundId === '2') {
-        console.log('Rs2')
+      } else if (stringRoundId === '2') {
         player.rs2 = payload.rs
-      } else if (payload.roundId === '3') {
-        console.log('Rs3')
+      } else if (stringRoundId === '3') {
         player.rs3 = payload.rs
       }
-
-      console.log('Here')
       console.log(state.players)
     },
     // setEndOfGameScore (state, payload) {
@@ -106,6 +103,25 @@ export const store = new Vuex.Store({
     },
     getUsers (state) {
       return state.players
+    },
+    isGameActive (state) {
+      if (state.players.length <= 1) {
+        // there must be more than one player to be active
+        return false
+      }
+
+      // here we look do all players have a score for round 3?
+      // if so then we presume it was done.  Do we need a flag that
+      // scores were complete?  Maybe ...
+      for (let i = 0; i < state.players.length; i++) {
+        const player = state.players[i]
+
+        const r3 = player.getRoundScore(3)
+        if (!r3) {
+          // this means nothing was ever entered for round 3 so game must be active
+          return true
+        }
+      }
     }
     // ,
     // getScoresForRound (state) {

@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 import GamePlay from '@/components/Game/GamePlay'
 import User from '@/components/Scorecard/User'
 import PlayerRound from '@/components/PlayerRound'
+import AddUser from '@/components/AddUser'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/playerround',
       name: 'PlayerRound',
       component: PlayerRound
+    },
+    {
+      path: '/adduser',
+      name: 'AddUser',
+      component: AddUser
     }
   ]
 })
