@@ -3,14 +3,14 @@
     <v-card>
       <user v-bind:user-id="theUserId" ></user>
 
-      <display-round-score v-bind:round-id=1 v-bind:user-id="userId" v-if="!editRound1" ></display-round-score>
-      <enter-round-score v-bind:round-id=1 v-bind:user-id="userId" v-else></enter-round-score>
+      <display-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-if="!editRound1" ></display-round-score>
+      <enter-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-else></enter-round-score>
 
-      <display-round-score v-bind:round-id=2 v-bind:user-id="userId" v-if="!editRound2" ></display-round-score>
-      <enter-round-score v-bind:round-id=2 v-bind:user-id="userId" v-else></enter-round-score>
+      <display-round-score v-bind:round-id=2 v-bind:user-id="theUserId" v-if="!editRound2" ></display-round-score>
+      <enter-round-score v-bind:round-id=2 v-bind:user-id="theUserId" v-else></enter-round-score>
 
-      <display-round-score v-bind:round-id=3 v-bind:user-id="userId" v-if="!editRound3" ></display-round-score>
-      <enter-round-score v-bind:round-id=3 v-bind:user-id="userId" v-else></enter-round-score>
+      <display-round-score v-bind:round-id=3 v-bind:user-id="theUserId" v-if="!editRound3" ></display-round-score>
+      <enter-round-score v-bind:round-id=3 v-bind:user-id="theUserId" v-else></enter-round-score>
     
     <!-- <round-score round-id="2" v-bind:user-id="userId" ></round-score>
     <round-score round-id="3" v-bind:user-id="userId" ></round-score> -->
@@ -27,9 +27,6 @@ export default {
     }
   },
   computed: {
-    player () {
-      return this.getPlayer()
-    },
     editRound1 () {
       return this.editRound(1)
     },
@@ -42,9 +39,6 @@ export default {
 
   },
   methods: {
-    getPlayer: function () {
-      return null
-    },
     editRound: function (roundId) {
       if (!this.addEditRoundId) {
         return false

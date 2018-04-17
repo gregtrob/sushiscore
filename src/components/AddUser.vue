@@ -1,5 +1,5 @@
 <template>
-    <v-dialog persistent max-width="290" value="true">
+    <!-- <v-dialog persistent max-width="290" value="true"> -->
       <v-card>
         <v-card-title class="headline">Add user</v-card-title>
           <v-card-text>
@@ -19,7 +19,7 @@
           <v-btn color="green darken-1" flat @click.native="startPlay">Start play</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    <!-- </v-dialog> -->
 </template>
 
 <script>
@@ -37,6 +37,10 @@ export default {
   },
   methods: {
     submitNameChange () {
+      if (!this.$refs.newnameform.validate()) {
+        return
+      }
+
       let payload = {
         id: null,
         name: this.newUserName
@@ -44,17 +48,15 @@ export default {
       this.$store.dispatch('changeUserName', payload)
     },
     addAnother () {
-      console.log(1)
       this.submitNameChange()
-      console.log(2)
-      this.newUserName = ''
-      console.log(3)
-      // this.$router.push('/AddUser')
+      // this.newUserName = ''
       this.$refs.newnameform.reset()
       // post an event here to say "redraw the users in play mofo"
     },
     startPlay () {
-      this.submitNameChange()
+      // if the background is updated via events and is in fact the "play" board
+      // all this needs to do is then close the dialog after adding
+      this.addAnother()
     }
   }
 }

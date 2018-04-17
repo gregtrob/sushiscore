@@ -1,9 +1,17 @@
 <template>
 
-<v-layout row justify-center>
-    <v-card v-for="player in playerList" :key="player.id">
-      <player-round userId=player.id></player-round>
-    </v-card>
+<v-layout justify-center>
+
+    <v-container fluid grid-list-sm>
+      <v-layout row wrap justify-center>
+        <v-flex xs4 v-for="player in playerList" :key="player.id">
+          <v-card id="player.id">
+            <player-round :userId='player.id'></player-round>
+          </v-card>      
+        </v-flex>
+      </v-layout>
+    </v-container>
+
 
     <v-dialog v-model="dialog" persistent max-width="290" v-if="isGameActive">
       <v-card>
@@ -27,6 +35,29 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog persistent max-width="290" v-model="addUser">
+      <v-card>
+        <v-card-title class="headline">Add user</v-card-title>
+          <v-card-text>
+              <v-form ref="newnameform">
+                <v-text-field label="User name"
+                                v-model="newUserName"
+                                style="display: inline-block"
+                                class="text-md-center"
+                                required
+                                :rules="[rules.required]">
+                </v-text-field>
+              </v-form>
+          </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat @click.native="addAnother">Add another</v-btn>
+          <v-btn color="green darken-1" flat @click.native="startPlay">Start play</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-layout>
 </template>
 
@@ -35,28 +66,55 @@ export default {
   name: 'hello',
   data () {
     return {
-      dialog: true
+      dialog: true,
+      addUser: false,
+      newUserName: this.theUserName,
+      rules: {
+        required: (value) => !!value || 'Required.'
+      }
     }
   },
   computed: {
     isGameActive () {
-      return !this.$store.getters.isGameActive
+      return this.$store.getters.isGameActive
     },
     playerList () {
       const players = this.$store.getters.getUsers
-      console.log(players)
       return players
     }
   },
   methods: {
     startNewGame () {
       this.dialog = false
-      this.$router.push('NewGame')
+      // this.$router.push('/adduser')
+      this.addUser = true
     },
     continueGame () {
-      console.log('here')
       this.dialog = false
       this.$router.push('/playerround')
+    },
+    submitNameChange () {
+      if (!this.$refs.newnameform.validate()) {
+        return false // failed validation
+      }
+
+      let payload = {
+        id: null,
+        name: this.newUserName
+      }
+      this.$store.dispatch('changeUserName', payload)
+      return true
+    },
+    addAnother () {
+      if (this.submitNameChange()) {
+        this.$refs.newnameform.reset()
+      }
+    },
+    startPlay () {
+      // if the background is updated via events and is in fact the "play" board
+      // all this needs to do is then close the dialog after adding
+      this.submitNameChange()
+      this.addUser = false
     }
   }
 }

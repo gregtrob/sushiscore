@@ -15,8 +15,6 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setScoreForRound (state, payload) {
-      console.log(payload)
-
       // I think if you find the player then you must remove them from the array
       // then update it at the end
       let player = null
@@ -47,7 +45,7 @@ export const store = new Vuex.Store({
       } else if (stringRoundId === '3') {
         player.rs3 = payload.rs
       }
-      console.log(state.players)
+      // console.log(state.players)
     },
     // setEndOfGameScore (state, payload) {
     // },
@@ -102,10 +100,13 @@ export const store = new Vuex.Store({
       }
     },
     getUsers (state) {
+      console.log(state.players)
       return state.players
     },
     isGameActive (state) {
+      console.log(state.players)
       if (state.players.length <= 1) {
+        console.log('Return false')
         // there must be more than one player to be active
         return false
       }

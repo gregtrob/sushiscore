@@ -71,11 +71,11 @@ export default {
     }
   },
   created () {
-    const rs = this.getRoundScore()
-    // TODO: Add null check if null create a blank one
+    let rs = this.getRoundScore()
     if (!rs) {
-      this.roundScore = new RoundScore()
+      rs = new RoundScore()
     }
+
     this.roundScore = rs.clone()
   }
 }
