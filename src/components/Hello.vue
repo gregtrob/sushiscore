@@ -36,7 +36,7 @@
       </v-card>
     </v-dialog>
 
-    <add-user addUser='addUser'></add-user>
+    <add-user v-bind:addUser='addUser'></add-user>
 
   </v-layout>
 </template>
@@ -78,32 +78,23 @@ export default {
       this.dialog = false
       this.$router.push('/playerround')
     },
-    submitNameChange () {
-      if (!this.$refs.newnameform.validate()) {
-        return false // failed validation
-      }
+    // submitNameChange () {
+    //   if (!this.$refs.newnameform.validate()) {
+    //     return false // failed validation
+    //   }
 
-      let payload = {
-        id: null,
-        name: this.newUserName
-      }
-      this.$store.dispatch('changeUserName', payload)
-      return true
-    },
-    addAnother () {
-      if (this.submitNameChange()) {
-        this.$refs.newnameform.reset()
-      }
-    },
+    //   let payload = {
+    //     id: null,
+    //     name: this.newUserName
+    //   }
+    //   this.$store.dispatch('changeUserName', payload)
+    //   return true
+    // },
     startPlay () {
       // if the background is updated via events and is in fact the "play" board
       // all this needs to do is then close the dialog after adding
       this.submitNameChange()
       this.addUser = false
-    },
-    addAUser () {
-      console.log('here')
-      this.addUser = true
     }
   }
 }
