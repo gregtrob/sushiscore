@@ -36,34 +36,19 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog persistent max-width="290" v-model="addUser">
-      <v-card>
-        <v-card-title class="headline">Add user</v-card-title>
-          <v-card-text>
-              <v-form ref="newnameform">
-                <v-text-field label="User name"
-                                v-model="newUserName"
-                                style="display: inline-block"
-                                class="text-md-center"
-                                required
-                                :rules="[rules.required]">
-                </v-text-field>
-              </v-form>
-          </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat @click.native="addAnother">Add another</v-btn>
-          <v-btn color="green darken-1" flat @click.native="startPlay">Start play</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <add-user addUser='addUser'></add-user>
 
   </v-layout>
 </template>
 
 <script>
+import UserDialog from './Scorecard/UserDialog.vue'
+
 export default {
   name: 'hello',
+  components: {
+    'add-user': UserDialog
+  },
   data () {
     return {
       dialog: true,
@@ -115,6 +100,10 @@ export default {
       // all this needs to do is then close the dialog after adding
       this.submitNameChange()
       this.addUser = false
+    },
+    addAUser () {
+      console.log('here')
+      this.addUser = true
     }
   }
 }

@@ -28,14 +28,17 @@
     },
     computed: {
       menuItems () {
+        // TODO: Use Events to trigger the dialogs for add & update
         let menuItems = [
           {
             icon: 'play_circle_outline', title: 'Start Game', link: '/start'
           },
           {
             icon: 'group_add', title: 'Add User', link: '/adduser'
+          },
+          {
+            icon: 'update', title: 'Score round', link: '/scoreround'
           }
-
         ]
 
         return menuItems
