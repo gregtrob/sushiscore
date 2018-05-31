@@ -59,6 +59,11 @@ export default {
       }
     }
   },
+  created () {
+    this.$on('closeAddUser', function () {
+      this.addUser = false
+    })
+  },
   computed: {
     isGameActive () {
       return this.$store.getters.isGameActive
@@ -77,7 +82,7 @@ export default {
     continueGame () {
       this.dialog = false
       this.$router.push('/playerround')
-    },
+    }
     // submitNameChange () {
     //   if (!this.$refs.newnameform.validate()) {
     //     return false // failed validation
@@ -90,12 +95,6 @@ export default {
     //   this.$store.dispatch('changeUserName', payload)
     //   return true
     // },
-    startPlay () {
-      // if the background is updated via events and is in fact the "play" board
-      // all this needs to do is then close the dialog after adding
-      this.submitNameChange()
-      this.addUser = false
-    }
   }
 }
 </script>

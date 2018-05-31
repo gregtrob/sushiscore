@@ -1,5 +1,5 @@
 <template>
-  <v-dialog persistent max-width="290" v-model="showDialog">
+  <v-dialog persistent max-width="290" v-model="addUser">
     <v-card>
       <v-card-title class="headline">Add user</v-card-title>
         <v-card-text>
@@ -29,7 +29,6 @@ export default {
   data () {
     return {
       newUserName: this.theUserName,
-      showDialog: this.addUser,
       rules: {
         required: (value) => !!value || 'Required.'
       }
@@ -57,7 +56,7 @@ export default {
       // if the background is updated via events and is in fact the "play" board
       // all this needs to do is then close the dialog after adding
       this.submitNameChange()
-      this.showDialog = false
+      this.$parent.$emit('closeAddUser')
     }
   }
 }
