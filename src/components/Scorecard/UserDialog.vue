@@ -56,6 +56,7 @@ export default {
       // if the background is updated via events and is in fact the "play" board
       // all this needs to do is then close the dialog after adding
       this.submitNameChange()
+      this.$refs.newnameform.reset()
       this.$parent.$emit('closeAddUser')
     }
   }
