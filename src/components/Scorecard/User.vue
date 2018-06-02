@@ -17,7 +17,7 @@
             </v-card-actions>
         </v-layout>
           <v-card-text v-else>
-              <div class="headline text-md-center">User {{ theUserName }}
+              <div class="headline text-md-center"> {{ theUserName }}
               <v-btn  v-on:click="setEditMode()" x-small><v-icon small>edit</v-icon></v-btn></div>
           </v-card-text>
   </v-container>

@@ -100,13 +100,13 @@ export const store = new Vuex.Store({
       }
     },
     getUsers (state) {
-      console.log(state.players)
+      // console.log(state.players)
       return state.players
     },
     isGameActive (state) {
-      console.log(state.players)
+      // console.log(state.players)
       if (state.players.length <= 1) {
-        console.log('Return false')
+        // console.log('Return false')
         // there must be more than one player to be active
         return false
       }

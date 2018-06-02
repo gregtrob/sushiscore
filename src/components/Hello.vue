@@ -12,6 +12,17 @@
       </v-layout>
     </v-container>
 
+    <v-btn
+      fab
+      small
+      color="cyan accent-2"
+      bottom
+      right
+      fixed
+      @click.native.stop="addUser = !addUser"
+    >
+      <v-icon>group_add</v-icon>
+    </v-btn>
 
     <v-dialog v-model="dialog" persistent max-width="290" v-if="isGameActive">
       <v-card>
