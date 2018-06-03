@@ -53,12 +53,14 @@
 </template>
 
 <script>
-import UserDialog from './Scorecard/UserDialog.vue'
+import UserDialog from './User/UserDialog.vue'
+import PlayerRound from './Game/PlayerRound.vue'
 
 export default {
   name: 'hello',
   components: {
-    'add-user': UserDialog
+    'add-user': UserDialog,
+    'player-round': PlayerRound
   },
   data () {
     return {

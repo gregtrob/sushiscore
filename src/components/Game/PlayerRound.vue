@@ -19,8 +19,18 @@
 
 </template>
 <script>
+
+import User from '../User/User'
+import DisplayScoreForRound from '../Scorecard/DisplayScoreForRound'
+import EnterScoreForRound from '../Scorecard/EnterScoreForRound'
+
 export default {
   props: ['userId', 'addEditRoundId'],
+  components: {
+    'user': User,
+    'display-round-score': DisplayScoreForRound,
+    'enter-round-score': EnterScoreForRound
+  },
   data () {
     return {
       theUserId: this.userId
