@@ -10,20 +10,32 @@
           </v-card>      
         </v-flex>
       </v-layout>
+
+    <v-layout column class="fab-container">
+      <v-btn
+        fab
+        small
+        color="cyan accent-2"
+        @click.native.stop="addUser = !addUser"
+      >     
+        <v-icon>group_add</v-icon>
+      </v-btn>
+
+      <v-btn
+        fab
+        small
+        color="cyan accent-2"
+        @click.native.stop="startRoundScore"
+      >     
+        <v-icon>score</v-icon>
+      </v-btn>
+
+    </v-layout>
+
     </v-container>
 
-    <v-btn
-      fab
-      small
-      color="cyan accent-2"
-      bottom
-      right
-      fixed
-      @click.native.stop="addUser = !addUser"
-    >
-      <v-icon>group_add</v-icon>
-    </v-btn>
 
+  
     <v-dialog v-model="dialog" persistent max-width="290" v-if="isGameActive">
       <v-card>
         <v-card-title class="headline">Continue existing game?</v-card-title>
@@ -48,11 +60,20 @@
     </v-dialog>
 
     <add-user v-bind:addUser='addUser'></add-user>
+    <round-score-dialog v-bind:enterScore='setScores'
+                        v-bind:userId='currentScorePlayerId'
+                        v-bind:roundId=currentScoreRoundId
+
+    ></round-score-dialog>
+
+    Score id: {{ currentScorePlayerId }}
+    Round Id: {{ currentScoreRoundId }}
 
   </v-layout>
 </template>
 
 <script>
+import RoundScoreDialog from './Scorecard/RoundScoreDialog.vue'
 import UserDialog from './User/UserDialog.vue'
 import PlayerRound from './Game/PlayerRound.vue'
 
@@ -60,13 +81,18 @@ export default {
   name: 'hello',
   components: {
     'add-user': UserDialog,
+    'round-score-dialog': RoundScoreDialog,
     'player-round': PlayerRound
   },
   data () {
     return {
       dialog: true,
       addUser: false,
+      roundScore: false,
       newUserName: this.theUserName,
+      scoreUserId: null,
+      scoreRoundId: null,
+
       rules: {
         required: (value) => !!value || 'Required.'
       }
@@ -84,6 +110,15 @@ export default {
     playerList () {
       const players = this.$store.getters.getUsers
       return players
+    },
+    setScores () {
+      return this.roundScore
+    },
+    currentScorePlayerId () {
+      return this.scoreUserId
+    },
+    currentScoreRoundId () {
+      return this.scoreRoundId
     }
   },
   methods: {
@@ -95,23 +130,36 @@ export default {
     continueGame () {
       this.dialog = false
       this.$router.push('/playerround')
-    }
-    // submitNameChange () {
-    //   if (!this.$refs.newnameform.validate()) {
-    //     return false // failed validation
-    //   }
+    },
+    startRoundScore () {
+      const pl = this.playerList
+      if (pl != null) {
+        console.log('Player 1: ' + pl)
+        const firstPlayer = pl[0]
+        if (firstPlayer != null) {
+          this.scoreUserId = firstPlayer.id
+        }
+      }
 
-    //   let payload = {
-    //     id: null,
-    //     name: this.newUserName
-    //   }
-    //   this.$store.dispatch('changeUserName', payload)
-    //   return true
-    // },
+      if (this.scoreRoundId == null) {
+        this.scoreRoundId = 0
+      }
+
+      this.scoreRoundId = this.scoreRoundId + 1
+      this.roundScore = !this.roundScore
+
+      console.log('Player id is ' + this.scoreUserId)
+      console.log('Round Id is ' + this.scoreRoundId)
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+.fab-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
 </style>
