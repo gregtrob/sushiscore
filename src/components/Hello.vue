@@ -63,11 +63,10 @@
     <round-score-dialog v-bind:enterScore='setScores'
                         v-bind:userId='currentScorePlayerId'
                         v-bind:roundId=currentScoreRoundId
-
     ></round-score-dialog>
 
-    Score id: {{ currentScorePlayerId }}
-    Round Id: {{ currentScoreRoundId }}
+    <!-- // Score id: {{ currentScorePlayerId }}
+    // Round Id: {{ currentScoreRoundId }} -->
 
   </v-layout>
 </template>
@@ -92,6 +91,7 @@ export default {
       newUserName: this.theUserName,
       scoreUserId: null,
       scoreRoundId: null,
+      playerIndex: null,
 
       rules: {
         required: (value) => !!value || 'Required.'
@@ -101,6 +101,22 @@ export default {
   created () {
     this.$on('closeAddUser', function () {
       this.addUser = false
+    })
+    this.$on('userscoresetforround', function (payload) {
+      console.log('In payload')
+      console.log(payload)
+
+      this.playerIndex = this.playerIndex + 1
+      if (this.playerIndex < this.playerList.length) {
+        this.scoreUserId = this.playerList[this.playerIndex].id
+        console.log('Used the if')
+      } else {
+        this.playerIndex = 0
+        this.scoreUserId = null
+        this.scoreRoundId = null
+        this.roundScore = !this.roundScore
+        console.log('Used the else')
+      }
     })
   },
   computed: {
@@ -135,7 +151,9 @@ export default {
       const pl = this.playerList
       if (pl != null) {
         console.log('Player 1: ' + pl)
-        const firstPlayer = pl[0]
+        this.playerIndex = 0
+        const firstPlayer = pl[this.playerIndex]
+
         if (firstPlayer != null) {
           this.scoreUserId = firstPlayer.id
         }

@@ -9,7 +9,7 @@
       <v-card-text>
           <v-layout row wrap>
             <v-container xs3 fluid>
-              <v-form @submit.prevent="handleSubmit">
+              <v-form @submit.prevent="handleSubmit" ref="scoreForm">
                 <v-layout row wrap>
                   <v-flex xs6>
                     <v-text-field
@@ -162,8 +162,7 @@ export default {
       editMode: true,
       twoDigitMask: '##',
       thePlayer: null,
-      roundScore: null,
-      theUserId: this.userId
+      roundScore: null
     }
   },
   computed: {
@@ -280,14 +279,15 @@ export default {
 
       localRS.nigiriCards = nc
       localRS.getTotal()
-      console.log(this.getPlayer())
       const payload = {
         id: this.getPlayer().id,
         roundId: this.roundId,
         rs: localRS
       }
 
+      this.$refs.scoreForm.reset()
       this.$store.dispatch('setScoreForRound', payload)
+      this.$parent.$emit('userscoresetforround', payload)
     }
   },
   created () {
