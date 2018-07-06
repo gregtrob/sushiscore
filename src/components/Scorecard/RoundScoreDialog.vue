@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title primary-title> 
         <v-layout row justify-center>
-            <h4 class="text-md-center">Round {{ roundId }} score for {{ userId }} </h4>
+            <h4 class="text-md-center">Round {{ roundId }} score for {{ name }} </h4>
         </v-layout>
       </v-card-title>
       <v-card-text>
@@ -18,7 +18,6 @@
                       id="makiPoints"
                       v-model.number="roundScore.makiPoints"
                       type="number"
-                      :mask="twoDigitMask"
                       >
                     </v-text-field>
                   </v-flex>
@@ -29,7 +28,7 @@
                       id="tempuraCards"
                       v-model.number="roundScore.tempuraCards"
                       type="number"
-                      :mask="twoDigitMask"                
+                                      
                       >
                     </v-text-field>
                   </v-flex>
@@ -40,7 +39,7 @@
                       id="sashimiCards"
                       v-model.number="roundScore.sashimiCards"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                     </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>
@@ -50,7 +49,7 @@
                       id="dumplingCards"
                       v-model.number="roundScore.dumplingCards"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 s6 justify-center>
@@ -63,7 +62,7 @@
                       id="salmonNigiriNoWasabi"
                       v-model.number="roundScore.nigiriCards.salmonNoWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>
@@ -73,7 +72,7 @@
                       id="salmonNigiriWithWasabi"
                       v-model.number="roundScore.nigiriCards.salmonWithWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs12 s6 justify-center>
@@ -86,7 +85,7 @@
                       id="eggNigiriNoWasabi"
                       v-model.number="roundScore.nigiriCards.eggNoWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>
@@ -96,7 +95,7 @@
                       id="eggNigiriWithWasabi"
                       v-model.number="roundScore.nigiriCards.eggWithWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs12 s6 justify-center>
@@ -110,7 +109,7 @@
                       id="squidNigiriNoWasabi"
                       v-model.number="roundScore.nigiriCards.squidNoWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>
@@ -120,7 +119,7 @@
                       id="squidNigiriWithWasabi"
                       v-model.number="roundScore.nigiriCards.squidWithWasabi"
                       type="number"
-                      :mask="twoDigitMask">
+                      >
                       </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>                  
@@ -130,7 +129,7 @@
                     id="Pudding Cards"
                     v-model.number="roundScore.puddingCards"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                   </v-flex>
                   <v-flex xs6 s3>
@@ -161,16 +160,22 @@ export default {
     return {
       editMode: true,
       twoDigitMask: '##',
-      thePlayer: null,
       roundScore: null
     }
   },
   computed: {
+    name () {
+      const player = this.player
+      if (!player) {
+        return 'Unknown'
+      }
+      return player.name
+    },
     scoreMode () {
       return true
     },
     userHasScore () {
-      const player = this.getPlayer()
+      const player = this.player
       if (!player) {
         return false
       }
@@ -183,41 +188,21 @@ export default {
       return false
     },
     player () {
-      return this.getPlayer()
-    },
-    scoreForRound () {
-      this.getRoundScore().getTotal()
-    }
-  },
-  methods: {
-    getPlayer: function () {
-      // console.log(this.thePlayer)
-      // if (this.thePlayer) {
-      //   console.log('Returning the player')
-      //   return this.thePlayer
-      // }
       console.log('UID' + this.userId)
       if (this.userId === null) {
         return null
       }
 
       return this.$store.getters.getUser(this.userId)
-      // let player = this.$store.getters.getUser(this.theUserId)
-      // if (!player) {
-      //   player = new Player()
-      //   player.rs1 = new RoundScore()
-      //   player.rs1.makiPoints = 5
-      //   player.rs1.puddingCards = 1
-      //   player.rs1.sashimiCards = 10
-      // }
-      // this.thePlayer = player
-      // console.log(this.thePlayer)
-      // return this.thePlayer
-      // return this.$store.getters.getUser(this.userId)
     },
+    scoreForRound () {
+      this.getRoundScore().getTotal()
+    }
+  },
+  methods: {
     getRoundScore: function () {
       // console.log(this.getPlayer())
-      let player = this.getPlayer()
+      let player = this.player
       console.log(player)
       if (player === null) {
         return null

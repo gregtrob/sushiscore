@@ -20,17 +20,15 @@
 import { RoundScore } from '@/store/services/score'
 
 export default {
-  props: ['userId', 'roundId', 'updateMode'],
+  props: ['userId', 'roundId'],
   data () {
     return {
-      thePlayer: null,
-      roundScore: null,
       theUserId: this.userId
     }
   },
   computed: {
     userHasScore () {
-      const player = this.getPlayer()
+      const player = this.player
       if (!player) {
         return false
       }
@@ -43,40 +41,27 @@ export default {
       return false
     },
     player () {
-      return this.getPlayer()
+      // return this.getPlayer()
+      console.log('UID' + this.userId)
+      if (this.userId === null) {
+        return null
+      }
+
+      return this.$store.getters.getUser(this.userId)
     },
     scoreForRound () {
       this.getRoundScore().getTotal()
     }
   },
   methods: {
-    getPlayer: function () {
-      if (this.thePlayer) {
-        // console.log('Found right away')
-        return this.thePlayer
-      }
-      let player = this.$store.getters.getUser(this.theUserId)
-      this.thePlayer = player
-      // console.log(this.thePlayer)
-      return this.thePlayer
-      // return this.$store.getters.getUser(this.userId)
-    },
     getRoundScore: function () {
-      const player = this.getPlayer()
+      const player = this.player()
       let rs = new RoundScore()
       if (player) {
         rs = player.getRoundScore(this.roundId)
       }
       return rs
     }
-  },
-  created () {
-    let rs = this.getRoundScore()
-    if (!rs) {
-      rs = new RoundScore()
-    }
-
-    this.roundScore = rs.clone()
   }
 }
 </script>
