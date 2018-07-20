@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
       // then update it at the end
       let player = null
       if (payload.id) {
-        // console.log('In payload.id')
+        console.log('In payload.id')
         player = state.players.find(function isId (statePlayer) {
           const val = statePlayer.id === payload.id
           // console.log(val)
@@ -28,15 +28,16 @@ export const store = new Vuex.Store({
         })
       }
 
-      // console.log(player)
+      console.log(player)
       if (!player) {
         player = new Player()
         state.players.push(player)
       }
 
-      // console.log(state.players)
-      // console.log('Round id is ' + payload.roundId)
-      // console.log(typeof (payload.roundId))
+      console.log(state.players)
+      console.log('Round id is ' + payload.roundId)
+      console.log(typeof (payload.roundId))
+      console.log(payload.rs)
       const stringRoundId = payload.roundId.toString()
       if (stringRoundId === '1') {
         player.rs1 = payload.rs
@@ -45,7 +46,7 @@ export const store = new Vuex.Store({
       } else if (stringRoundId === '3') {
         player.rs3 = payload.rs
       }
-      // console.log(state.players)
+      console.log(state.players)
     },
     // setEndOfGameScore (state, payload) {
     // },

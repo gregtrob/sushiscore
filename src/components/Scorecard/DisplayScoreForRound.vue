@@ -7,7 +7,7 @@
     </v-card-title>
     <v-card-text justify-center>
       <div v-if="userHasScore">
-        <div class="text-md-center">Your score for the round was {{ roundScore.getTotal() }}.  You had {{ roundScore.makiPoints }} maki points.  You had {{ roundScore.puddingCards }} pudding cards.</div>          
+        <div class="text-md-center">Your score for the round was {{ scoreForRound.getTotal() }}.  You had {{ scoreForRound.makiPoints }} maki points.  You had {{ scoreForRound.puddingCards }} pudding cards.</div>          
       </div>
       <div v-else>
         No score yet
@@ -23,7 +23,6 @@ export default {
   props: ['userId', 'roundId'],
   data () {
     return {
-      theUserId: this.userId
     }
   },
   computed: {
@@ -50,16 +49,23 @@ export default {
       return this.$store.getters.getUser(this.userId)
     },
     scoreForRound () {
-      this.getRoundScore().getTotal()
-    }
-  },
-  methods: {
-    getRoundScore: function () {
-      const player = this.player()
       let rs = new RoundScore()
-      if (player) {
-        rs = player.getRoundScore(this.roundId)
+
+      if (!this.userHasScore) {
+        return rs
       }
+
+      const player = this.player
+      if (player) {
+        let tempRS = player.getRoundScore(this.roundId)
+        console.log(tempRS)
+
+        if (tempRS) {
+          rs = tempRS
+        }
+      }
+
+      console.log(rs)
       return rs
     }
   }

@@ -16,7 +16,7 @@
                       name="makiPoints"
                       label="Maki Points"
                       id="makiPoints"
-                      v-model.number="roundScore.makiPoints"
+                      v-model.number="scoreForRound.makiPoints"
                       type="number"
                       >
                     </v-text-field>
@@ -26,7 +26,7 @@
                       name="tempuraCards"
                       label="Tempura Cards"
                       id="tempuraCards"
-                      v-model.number="roundScore.tempuraCards"
+                      v-model.number="scoreForRound.tempuraCards"
                       type="number"
                                       
                       >
@@ -37,7 +37,7 @@
                       name="sashimiCards"
                       label="Sashimi Cards"
                       id="sashimiCards"
-                      v-model.number="roundScore.sashimiCards"
+                      v-model.number="scoreForRound.sashimiCards"
                       type="number"
                       >
                     </v-text-field>
@@ -47,7 +47,7 @@
                       name="dumplingCards"
                       label="Dumpling Cards"
                       id="dumplingCards"
-                      v-model.number="roundScore.dumplingCards"
+                      v-model.number="scoreForRound.dumplingCards"
                       type="number"
                       >
                     </v-text-field>
@@ -60,7 +60,7 @@
                       name="salmonNigiriNoWasabi"
                       label="No Wasabi"
                       id="salmonNigiriNoWasabi"
-                      v-model.number="roundScore.nigiriCards.salmonNoWasabi"
+                      v-model.number="scoreForRound.nigiriCards.salmonNoWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -70,7 +70,7 @@
                       name="salmonNigiriWithWasabi"
                       label="With Wasabi"
                       id="salmonNigiriWithWasabi"
-                      v-model.number="roundScore.nigiriCards.salmonWithWasabi"
+                      v-model.number="scoreForRound.nigiriCards.salmonWithWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -83,7 +83,7 @@
                       name="eggNigiriNoWasabi"
                       label="No Wasabi"
                       id="eggNigiriNoWasabi"
-                      v-model.number="roundScore.nigiriCards.eggNoWasabi"
+                      v-model.number="scoreForRound.nigiriCards.eggNoWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -93,7 +93,7 @@
                       name="eggNigiriWithWasabi"
                       label="With Wasabi"
                       id="eggNigiriWithWasabi"
-                      v-model.number="roundScore.nigiriCards.eggWithWasabi"
+                      v-model.number="scoreForRound.nigiriCards.eggWithWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -107,7 +107,7 @@
                       name="squidNigiriNoWasabi"
                       label="No Wasabi"
                       id="squidNigiriNoWasabi"
-                      v-model.number="roundScore.nigiriCards.squidNoWasabi"
+                      v-model.number="scoreForRound.nigiriCards.squidNoWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -117,7 +117,7 @@
                       name="squidNigiriWithWasabi"
                       label="With Wasabi"
                       id="squidNigiriWithWasabi"
-                      v-model.number="roundScore.nigiriCards.squidWithWasabi"
+                      v-model.number="scoreForRound.nigiriCards.squidWithWasabi"
                       type="number"
                       >
                       </v-text-field>
@@ -127,7 +127,7 @@
                     name="puddingCards"
                     label="Pudding Cards"
                     id="Pudding Cards"
-                    v-model.number="roundScore.puddingCards"
+                    v-model.number="scoreForRound.puddingCards"
                     type="number"
                     >
                     </v-text-field>
@@ -158,20 +158,15 @@ export default {
 
   data () {
     return {
-      editMode: true,
-      twoDigitMask: '##',
-      roundScore: null
+      twoDigitMask: '##'
     }
   },
   computed: {
-    name () {
-      const player = this.player
-      if (!player) {
-        return 'Unknown'
-      }
-      return player.name
-    },
     scoreMode () {
+      if (this.updateMode) {
+        return true
+      }
+
       return true
     },
     userHasScore () {
@@ -180,7 +175,7 @@ export default {
         return false
       }
 
-      const score = player.getRoundScore(this.roundId)
+      const score = this.scoreForRound
       if (score) {
         return true
       }
@@ -188,7 +183,6 @@ export default {
       return false
     },
     player () {
-      console.log('UID' + this.userId)
       if (this.userId === null) {
         return null
       }
@@ -196,36 +190,40 @@ export default {
       return this.$store.getters.getUser(this.userId)
     },
     scoreForRound () {
-      this.getRoundScore().getTotal()
-    }
-  },
-  methods: {
-    getRoundScore: function () {
-      // console.log(this.getPlayer())
-      let player = this.player
-      console.log(player)
-      if (player === null) {
-        return null
+      let rs = new RoundScore()
+
+      // if (!this.userHasScore) {
+      //   return rs
+      // }
+
+      const player = this.player
+      if (player) {
+        let tempRS = player.getRoundScore(this.roundId)
+        console.log(tempRS)
+
+        if (tempRS) {
+          rs = tempRS
+        }
       }
 
-      if (this.roundId === null) {
-        this.roundId = 0
-      }
-
-      let rs = player.getRoundScore(this.roundId)
       console.log(rs)
-      if (!rs) {
-        console.log('RS did not already exist')
-        rs = new RoundScore()
-      }
-      // console.log('Getting fs')
-      // console.log(rs)
       return rs
     },
+    name () {
+      const player = this.player
+      if (player) {
+        return player.name
+      }
+
+      return 'Unknown'
+    }
+
+  },
+  methods: {
     handleSubmit: function () {
-      // console.log('Here I am')
-      console.log(this.roundScore)
-      const localRS = this.roundScore
+      console.log('Here I am')
+      console.log(this.scoreForRound)
+      const localRS = this.scoreForRound
       if (!checkNumber(localRS.makiPoints)) {
         localRS.makiPoints = 0
       }
@@ -263,28 +261,39 @@ export default {
       }
 
       localRS.nigiriCards = nc
+      console.log('Before total')
+      console.log(localRS)
       localRS.getTotal()
+      console.log('Local')
+      console.log(localRS)
+      console.log(this.player)
       const payload = {
-        id: this.getPlayer().id,
+        id: this.player.id,
         roundId: this.roundId,
-        rs: localRS
+        rs: null
       }
 
-      this.$refs.scoreForm.reset()
+      console.log('Sending the payload 1')
+      console.log(payload)
+
+      payload.rs = localRS
+
+      console.log('Sending the payload 2')
+      console.log(payload)
+
+      // this.$refs.scoreForm.reset()
       this.$store.dispatch('setScoreForRound', payload)
       this.$parent.$emit('userscoresetforround', payload)
     }
-  },
-  created () {
-    let rs = this.getRoundScore()
-    console.log(rs)
-    if (!rs) {
-      console.log('new rs')
-      rs = new RoundScore()
-    }
-    console.log(rs)
-    this.roundScore = rs.clone()
   }
+  // ,
+  // created () {
+  //   const rs = this.getRoundScore()
+  //   if (!rs) {
+  //     this.roundScore = new RoundScore()
+  //   }
+  //   this.roundScore = rs.clone()
+  // }
 }
 </script>
 
