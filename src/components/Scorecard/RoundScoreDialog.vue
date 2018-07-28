@@ -286,14 +286,6 @@ export default {
       this.$parent.$emit('userscoresetforround', payload)
     }
   }
-  // ,
-  // created () {
-  //   const rs = this.getRoundScore()
-  //   if (!rs) {
-  //     this.roundScore = new RoundScore()
-  //   }
-  //   this.roundScore = rs.clone()
-  // }
 }
 </script>
 

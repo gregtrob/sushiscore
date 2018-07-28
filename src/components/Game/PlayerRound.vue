@@ -1,6 +1,5 @@
 <template>
   <div>
-    <v-card>
       <user v-bind:user-id="theUserId" ></user>
 
       <display-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-if="!editRound1" ></display-round-score>
@@ -14,7 +13,6 @@
     
     <!-- <round-score round-id="2" v-bind:user-id="userId" ></round-score>
     <round-score round-id="3" v-bind:user-id="userId" ></round-score> -->
-    </v-card>
   </div>
 
 </template>
@@ -31,11 +29,11 @@ export default {
     'display-round-score': DisplayScoreForRound,
     'enter-round-score': EnterScoreForRound
   },
-  data () {
-    return {
-      theUserId: this.userId
-    }
-  },
+  // data () {
+  //   // return {
+  //   //   theUserId: this.userId
+  //   // }
+  // },
   computed: {
     editRound1 () {
       return this.editRound(1)
@@ -45,6 +43,9 @@ export default {
     },
     editRound3 () {
       return this.editRound(3)
+    },
+    theUserId () {
+      return this.userId
     }
 
   },

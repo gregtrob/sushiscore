@@ -1,26 +1,33 @@
 <template>
-  <v-container fluid>
-      <v-layout v-if="inEditMode">
-          <v-card-text>
-              <v-form >
-                <v-text-field label="User name"
-                                v-model="newUserName"
-                                style="display: inline-block"
-                                class="text-md-center"
-                                required
-                                :rules="[rules.required]">
-                </v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" @click="submitNameChange">OK</v-btn>
-            </v-card-actions>
-        </v-layout>
-          <v-card-text v-else>
-              <div class="headline text-md-center"> {{ theUserName }}
-              <v-btn  v-on:click="setEditMode()" x-small><v-icon small>edit</v-icon></v-btn></div>
-          </v-card-text>
-  </v-container>
+  <v-card tile>
+    <v-layout row justify-center>
+
+      <v-card-text v-if="inEditMode">
+          <v-form >
+            <v-text-field label="User name"
+                            v-model="newUserName"
+                            style="display: inline-block"
+                            class="text-md-center"
+                            required
+                            :rules="[rules.required]">
+            </v-text-field>
+
+          <!-- <v-card-actions> -->
+            <v-icon @click="submitNameChange" small color="cyan darken-2">done</v-icon>
+          <!-- </v-card-actions> -->
+
+          </v-form>
+
+        </v-card-text>
+      <v-card-title primary-title v-else>
+              <span class="text-md-center">
+                {{ theUserName }} 
+                <v-icon v-on:click="setEditMode()" color="cyan darken-2" small>edit</v-icon>
+              </span>
+      </v-card-title>
+    </v-layout>
+
+  </v-card>
 </template>
 
 <script>
