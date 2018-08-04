@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-card-title primary-title>
+    <!-- <v-card-title primary-title>
       <v-layout row justify-center>
           <h4 class="text-md-center">Round {{ roundId }} score</h4>
       </v-layout>
-    </v-card-title>
+    </v-card-title> -->
     <v-card-text>
         <v-layout row wrap>
           <v-container xs3 fluid>
@@ -17,7 +17,6 @@
                     id="makiPoints"
                     v-model.number="scoreForRound.makiPoints"
                     type="number"
-                    :mask="twoDigitMask"
                     >
                   </v-text-field>
                 </v-flex>
@@ -28,7 +27,6 @@
                     id="tempuraCards"
                     v-model.number="scoreForRound.tempuraCards"
                     type="number"
-                    :mask="twoDigitMask"                
                     >
                   </v-text-field>
                 </v-flex>
@@ -39,7 +37,7 @@
                     id="sashimiCards"
                     v-model.number="scoreForRound.sashimiCards"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                   </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>
@@ -49,7 +47,7 @@
                     id="dumplingCards"
                     v-model.number="scoreForRound.dumplingCards"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                   </v-text-field>
                 </v-flex>
                 <v-flex xs12 s6 justify-center>
@@ -62,7 +60,7 @@
                     id="salmonNigiriNoWasabi"
                     v-model.number="scoreForRound.nigiriCards.salmonNoWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>
@@ -72,7 +70,7 @@
                     id="salmonNigiriWithWasabi"
                     v-model.number="scoreForRound.nigiriCards.salmonWithWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs12 s6 justify-center>
@@ -85,7 +83,7 @@
                     id="eggNigiriNoWasabi"
                     v-model.number="scoreForRound.nigiriCards.eggNoWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>
@@ -95,7 +93,7 @@
                     id="eggNigiriWithWasabi"
                     v-model.number="scoreForRound.nigiriCards.eggWithWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs12 s6 justify-center>
@@ -109,7 +107,7 @@
                     id="squidNigiriNoWasabi"
                     v-model.number="scoreForRound.nigiriCards.squidNoWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>
@@ -119,7 +117,7 @@
                     id="squidNigiriWithWasabi"
                     v-model.number="scoreForRound.nigiriCards.squidWithWasabi"
                     type="number"
-                    :mask="twoDigitMask">
+                    >
                     </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>                  
@@ -129,7 +127,7 @@
                   id="Pudding Cards"
                   v-model.number="scoreForRound.puddingCards"
                   type="number"
-                  :mask="twoDigitMask">
+                  >
                   </v-text-field>
                 </v-flex>
                 <v-flex xs6 s3>
@@ -189,10 +187,6 @@ export default {
     scoreForRound () {
       let rs = new RoundScore()
 
-      if (!this.userHasScore) {
-        return rs
-      }
-
       const player = this.player
       if (player) {
         let tempRS = player.getRoundScore(this.roundId)
@@ -250,18 +244,29 @@ export default {
       }
 
       localRS.nigiriCards = nc
+      console.log('Before total')
+      console.log(localRS)
       localRS.getTotal()
+      console.log('Local')
+      console.log(localRS)
+      console.log(this.player)
       const payload = {
-        id: this.getPlayer().id,
+        id: this.player.id,
         roundId: this.roundId,
-        rs: localRS
+        rs: null
       }
 
-      console.log('Sending the payload')
+      console.log('Sending the payload 1')
       console.log(payload)
 
-      this.updateMode = false
+      payload.rs = localRS
+
+      console.log('Sending the payload 2')
+      console.log(payload)
+
+      // this.$refs.scoreForm.reset()
       this.$store.dispatch('setScoreForRound', payload)
+      this.$parent.$emit('userscoresetforround', payload)
     }
   }
   // ,
