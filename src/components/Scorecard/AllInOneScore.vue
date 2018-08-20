@@ -3,11 +3,11 @@
     <v-card-title primary-title>
       <v-layout row justify-center>
           <h4 class="text-md-center">Round {{ roundId }} score</h4>
-          <v-icon v-on:click="setEditMode()" color="cyan darken-2" small v-if="!this.parentScoreEditMode">edit</v-icon>
+          <v-icon v-on:click="setEditMode()" color="cyan darken-2" small v-if="allowEditMode">edit</v-icon>
       </v-layout>
     </v-card-title>
     
-    <enter-round-score v-bind:round-id=roundId v-bind:user-id="userId" v-if="inEditMode"></enter-round-score>
+    <enter-round-score v-bind:round-id=roundId v-bind:user-id="userId" v-if="inEditMode"@editcomplete="editComplete"></enter-round-score>
     <v-card-text justify-center v-else>
       <div v-if="userHasScore">
         <div class="text-md-center">Your score for the round was {{ scoreForRound.getTotal() }}.  You had {{ scoreForRound.makiPoints }} maki points.  You had {{ scoreForRound.puddingCards }} pudding cards.</div>          
@@ -24,7 +24,7 @@ import { RoundScore } from '@/store/services/score'
 import EnterScoreForRound from '../Scorecard/EnterScoreForRound'
 
 export default {
-  props: ['userId', 'roundId', 'parentScoreEditMode'],
+  props: ['userId', 'roundId', 'parentScoreEditMode', 'parentAllowEditMode'],
   components: {
     'enter-round-score': EnterScoreForRound
   },
@@ -34,6 +34,9 @@ export default {
     }
   },
   computed: {
+    allowEditMode () {
+      return !this.$store.getters.isAnyoneEditing
+    },
     inEditMode () {
       return this.localScoreEditMode
     },
@@ -51,8 +54,6 @@ export default {
       return false
     },
     player () {
-      // return this.getPlayer()
-      console.log('UID' + this.userId)
       if (this.userId === null) {
         return null
       }
@@ -75,14 +76,28 @@ export default {
           rs = tempRS
         }
       }
-
-      console.log(rs)
       return rs
     }
   },
   methods: {
     setEditMode () {
+      if (this.localScoreEditMode) {
+        // if we're in edit mode we don't do anything here because we dont' allow the icon to do this
+        return
+      }
+
+      // Added 2018/08/09 not yet tested
+      let payload = {
+        userId: this.userId,
+        roundId: this.roundId
+      }
+      this.$store.dispatch('setEdit', payload)
+
       this.localScoreEditMode = !this.localScoreEditMode
+    },
+    editComplete (payload) {
+      console.log('in editComplete')
+      this.localScoreEditMode = false
     }
   }
 

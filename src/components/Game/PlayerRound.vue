@@ -2,18 +2,19 @@
   <div>
       <user v-bind:user-id="theUserId" ></user>
 
-      <all-in-one-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-bind:parentScoreEditMode="editRound1" ></all-in-one-round-score>
-      <all-in-one-round-score v-bind:round-id=2 v-bind:user-id="theUserId" v-bind:parentScoreEditMode="editRound2" ></all-in-one-round-score>
-      <all-in-one-round-score v-bind:round-id=3 v-bind:user-id="theUserId" v-bind:parentScoreEditMode="editRound3" ></all-in-one-round-score>      
-      <!-- <display-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-if="!editRound1" ></display-round-score>
-      <enter-round-score v-bind:round-id=1 v-bind:user-id="theUserId" v-else></enter-round-score> 
-
-      <display-round-score v-bind:round-id=2 v-bind:user-id="theUserId" v-if="!editRound2" ></display-round-score>
-      <enter-round-score v-bind:round-id=2 v-bind:user-id="theUserId" v-else></enter-round-score>
-
-      <display-round-score v-bind:round-id=3 v-bind:user-id="theUserId" v-if="!editRound3" ></display-round-score>
-      <enter-round-score v-bind:round-id=3 v-bind:user-id="theUserId" v-else></enter-round-score> -->
-      </div>
+      <all-in-one-round-score v-bind:round-id=1 
+                              v-bind:user-id="theUserId" 
+                              v-bind:parentScoreEditMode="editRound1"
+                              ></all-in-one-round-score>
+      <all-in-one-round-score v-bind:round-id=2 
+                              v-bind:user-id="theUserId" 
+                              v-bind:parentScoreEditMode="editRound2"
+                              ></all-in-one-round-score>    
+      <all-in-one-round-score v-bind:round-id=3 
+                              v-bind:user-id="theUserId" 
+                              v-bind:parentScoreEditMode="editRound3"
+                              ></all-in-one-round-score>      
+  </div>
 
 </template>
 <script>
@@ -22,34 +23,41 @@ import User from '../User/User'
 import AllInoOneScoreForRound from '../Scorecard/AllinOneScore'
 
 export default {
-  props: ['userId', 'addEditRoundId'],
+  props: ['userId', 'addEditId'],
   components: {
     'user': User,
     'all-in-one-round-score': AllInoOneScoreForRound
   },
   computed: {
     editRound1 () {
-      return this.editRound(1)
+      return this.getEditDetails(1)
     },
     editRound2 () {
-      return this.editRound(2)
+      return this.getEditDetails(2)
     },
     editRound3 () {
-      return this.editRound(3)
+      return this.getEditDetails(3)
     },
     theUserId () {
       return this.userId
     }
-
   },
   methods: {
-    editRound: function (roundId) {
-      if (!this.addEditRoundId) {
+    getEditDetails: function (roundId) {
+      const editDetails = this.$store.getters.getEditDetails
+      if (!editDetails) {
         return false
       }
-      const stringRoundId = roundId.toString()
-      const stringAddEditRoundId = this.addEditRoundId.toString()
-      return stringRoundId === stringAddEditRoundId
+
+      if (editDetails.userId !== this.userId) {
+        return false
+      }
+
+      if (editDetails.roundId === roundId) {
+        return true
+      }
+
+      return false
     }
   }
 }

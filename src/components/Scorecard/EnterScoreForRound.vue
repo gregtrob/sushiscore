@@ -256,27 +256,20 @@ export default {
         rs: null
       }
 
-      console.log('Sending the payload 1')
-      console.log(payload)
+      // console.log('Sending the payload 1')
+      // console.log(payload)
 
       payload.rs = localRS
 
-      console.log('Sending the payload 2')
-      console.log(payload)
+      // console.log('Sending the payload 2')
+      // console.log(payload)
 
       // this.$refs.scoreForm.reset()
       this.$store.dispatch('setScoreForRound', payload)
       this.$parent.$emit('userscoresetforround', payload)
+      this.$emit('editcomplete', payload)
     }
   }
-  // ,
-  // created () {
-  //   const rs = this.getRoundScore()
-  //   if (!rs) {
-  //     this.roundScore = new RoundScore()
-  //   }
-  //   this.roundScore = rs.clone()
-  // }
 }
 </script>
 

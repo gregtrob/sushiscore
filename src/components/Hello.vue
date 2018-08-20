@@ -6,7 +6,7 @@
       <v-layout row wrap justify-center>
         <v-flex xs4 v-for="player in playerList" :key="player.id">
           <v-card id="player.id">
-            <player-round :userId='player.id'></player-round>
+            <player-round :userId='player.id' :add-edit-id=0></player-round>
           </v-card>      
         </v-flex>
       </v-layout>
