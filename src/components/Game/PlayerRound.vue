@@ -23,7 +23,7 @@ import User from '../User/User'
 import AllInoOneScoreForRound from '../Scorecard/AllinOneScore'
 
 export default {
-  props: ['userId', 'addEditId'],
+  props: ['userId'],
   components: {
     'user': User,
     'all-in-one-round-score': AllInoOneScoreForRound

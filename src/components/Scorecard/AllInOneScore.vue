@@ -7,7 +7,7 @@
       </v-layout>
     </v-card-title>
     
-    <enter-round-score v-bind:round-id=roundId v-bind:user-id="userId" v-if="inEditMode"@editcomplete="editComplete"></enter-round-score>
+    <enter-round-score v-bind:round-id=roundId v-bind:user-id="userId" v-if="inEditMode" @editcomplete="editComplete"></enter-round-score>
     <v-card-text justify-center v-else>
       <div v-if="userHasScore">
         <div class="text-md-center">Your score for the round was {{ scoreForRound.getTotal() }}.  You had {{ scoreForRound.makiPoints }} maki points.  You had {{ scoreForRound.puddingCards }} pudding cards.</div>          
@@ -30,7 +30,7 @@ export default {
   },
   data () {
     return {
-      localScoreEditMode: this.parentScoreEditMode
+      localScoreEditMode: false
     }
   },
   computed: {
@@ -38,7 +38,7 @@ export default {
       return !this.$store.getters.isAnyoneEditing
     },
     inEditMode () {
-      return this.localScoreEditMode
+      return this.localScoreEditMode || this.parentScoreEditMode
     },
     userHasScore () {
       const player = this.player
@@ -70,8 +70,6 @@ export default {
       const player = this.player
       if (player) {
         let tempRS = player.getRoundScore(this.roundId)
-        console.log(tempRS)
-
         if (tempRS) {
           rs = tempRS
         }
@@ -86,7 +84,6 @@ export default {
         return
       }
 
-      // Added 2018/08/09 not yet tested
       let payload = {
         userId: this.userId,
         roundId: this.roundId
@@ -96,7 +93,6 @@ export default {
       this.localScoreEditMode = !this.localScoreEditMode
     },
     editComplete (payload) {
-      console.log('in editComplete')
       this.localScoreEditMode = false
     }
   }

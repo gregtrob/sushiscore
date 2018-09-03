@@ -4,9 +4,10 @@
 
     <v-container fluid grid-list-sm>
       <v-layout row wrap justify-center>
+
         <v-flex xs4 v-for="player in playerList" :key="player.id">
           <v-card id="player.id">
-            <player-round :userId='player.id' :add-edit-id=0></player-round>
+            <player-round :userId='player.id'></player-round>
           </v-card>      
         </v-flex>
       </v-layout>
@@ -42,8 +43,8 @@
         <v-card-text>It appears a game is in progress.  Would you like to continue it or start a new game?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat @click.native="continueGame">Continue</v-btn>
-          <v-btn color="green darken-1" flat @click.native="startNewGame">New</v-btn>
+          <v-btn color="darken-1" flat @click.native="continueGame">Continue</v-btn>
+          <v-btn color="darken-1" flat @click.native="startNewGame">New</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -53,20 +54,14 @@
         <v-card-text>There's nothing here.  Would you like to start a game?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat @click.native="startNewGame">Yes</v-btn>
-          <v-btn color="green darken-1" flat @click.native="dialog = false">No</v-btn>
+          <v-btn color="darken-1" flat @click.native="startNewGame">Yes</v-btn>
+          <v-btn color="darken-1" flat @click.native="dialog = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <add-user v-bind:addUser='addUser'></add-user>
-    <round-score-dialog v-bind:enterScore='setScores'
-                        v-bind:userId='currentScorePlayerId'
-                        v-bind:roundId=currentScoreRoundId
-    ></round-score-dialog>
 
-    <!-- // Score id: {{ currentScorePlayerId }}
-    // Round Id: {{ currentScoreRoundId }} -->
 
   </v-layout>
 </template>
@@ -89,9 +84,8 @@ export default {
       addUser: false,
       roundScore: false,
       newUserName: this.theUserName,
-      scoreUserId: null,
-      scoreRoundId: null,
-      playerIndex: null,
+      scoreRoundId: 1,
+      playerIndex: -1,
 
       rules: {
         required: (value) => !!value || 'Required.'
@@ -103,19 +97,23 @@ export default {
       this.addUser = false
     })
     this.$on('userscoresetforround', function (payload) {
-      console.log('In payload')
-      console.log(payload)
-
       this.playerIndex = this.playerIndex + 1
       if (this.playerIndex < this.playerList.length) {
-        this.scoreUserId = this.playerList[this.playerIndex].id
-        console.log('Used the if')
+        const scoreUserId = this.playerList[this.playerIndex].id
+
+        let payload = {
+          userId: scoreUserId,
+          roundId: this.scoreRoundId
+        }
+        this.$store.dispatch('setEdit', payload)
       } else {
-        this.playerIndex = 0
-        this.scoreUserId = null
-        this.scoreRoundId = null
+        this.playerIndex = -1
+        this.scoreRoundId = this.scoreRoundId + 1
         this.roundScore = !this.roundScore
-        console.log('Used the else')
+
+        if (this.scoreUserId === 4) {
+          // todo: trigger win
+        }
       }
     })
   },
@@ -148,25 +146,33 @@ export default {
       this.$router.push('/playerround')
     },
     startRoundScore () {
-      const pl = this.playerList
-      if (pl != null) {
-        console.log('Player 1: ' + pl)
-        this.playerIndex = 0
-        const firstPlayer = pl[this.playerIndex]
+      // instead of a plaer id use an index
+      // if that index > length then up the round score id and don't send the payload and set index to none (or 0)
+      // if the round score id goes to 4 then kick off the celebrate page
+      let scoreUserId = -1
+      if (this.playerList != null) {
+        console.log(this.playerList)
+        console.log('Score user id' + scoreUserId)
+        console.log('Player Index' + this.playerIndex)
+        this.playerIndex = this.playerIndex + 1
+        console.log('Player index' + this.playerIndex)
+        const player = this.playerList[this.playerIndex]
 
-        if (firstPlayer != null) {
-          this.scoreUserId = firstPlayer.id
+        console.log(player)
+        if (player != null) {
+          scoreUserId = player.id
         }
+
+        let payload = {
+          userId: scoreUserId,
+          roundId: this.scoreRoundId
+        }
+        this.$store.dispatch('setEdit', payload)
+
+        this.roundScore = !this.roundScore
       }
 
-      if (this.scoreRoundId == null) {
-        this.scoreRoundId = 0
-      }
-
-      this.scoreRoundId = this.scoreRoundId + 1
-      this.roundScore = !this.roundScore
-
-      console.log('Player id is ' + this.scoreUserId)
+      console.log('Player id is ' + scoreUserId)
       console.log('Round Id is ' + this.scoreRoundId)
     }
   }
