@@ -266,7 +266,7 @@ export default {
 
       // this.$refs.scoreForm.reset()
       this.$store.dispatch('setScoreForRound', payload)
-      this.$parent.$emit('userscoresetforround', payload)
+      this.$emit('usersetscoreforround', payload)
       this.$emit('editcomplete', payload)
     }
   }

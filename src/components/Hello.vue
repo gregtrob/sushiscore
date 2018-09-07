@@ -18,6 +18,7 @@
         small
         color="cyan accent-2"
         @click.native.stop="addUser = !addUser"
+        v-on:close-add-user="closeAddUser"
       >     
         <v-icon>group_add</v-icon>
       </v-btn>
@@ -27,6 +28,7 @@
         small
         color="cyan accent-2"
         @click.native.stop="startRoundScore"
+        v-on:user-set-score-for-round="setScoreForRound"
       >     
         <v-icon>score</v-icon>
       </v-btn>
@@ -35,8 +37,6 @@
 
     </v-container>
 
-
-  
     <v-dialog v-model="dialog" persistent max-width="290" v-if="isGameActive">
       <v-card>
         <v-card-title class="headline">Continue existing game?</v-card-title>
@@ -60,7 +60,7 @@
       </v-card>
     </v-dialog>
 
-    <add-user v-bind:addUser='addUser'></add-user>
+    <add-user v-bind:addUser='addUser' v-on:close-add-user="closeAddUser()"></add-user>
 
 
   </v-layout>
@@ -93,29 +93,30 @@ export default {
     }
   },
   created () {
-    this.$on('closeAddUser', function () {
-      this.addUser = false
-    })
-    this.$on('userscoresetforround', function (payload) {
-      this.playerIndex = this.playerIndex + 1
-      if (this.playerIndex < this.playerList.length) {
-        const scoreUserId = this.playerList[this.playerIndex].id
+    // this.$on('closeAddUser', function () {
+    //   this.addUser = false
+    // })
+    // this.$on('usersetscoreforround', function () {
+    //   this.playerIndex = this.playerIndex + 1
+    //   console.log('PI:' + this.playerIndex)
+    //   if (this.playerIndex < this.playerList.length) {
+    //     const scoreUserId = this.playerList[this.playerIndex].id
 
-        let payload = {
-          userId: scoreUserId,
-          roundId: this.scoreRoundId
-        }
-        this.$store.dispatch('setEdit', payload)
-      } else {
-        this.playerIndex = -1
-        this.scoreRoundId = this.scoreRoundId + 1
-        this.roundScore = !this.roundScore
+    //     let payload = {
+    //       userId: scoreUserId,
+    //       roundId: this.scoreRoundId
+    //     }
+    //     this.$store.dispatch('setEdit', payload)
+    //   } else {
+    //     this.playerIndex = -1
+    //     this.scoreRoundId = this.scoreRoundId + 1
+    //     this.roundScore = !this.roundScore
 
-        if (this.scoreUserId === 4) {
-          // todo: trigger win
-        }
-      }
-    })
+    //     if (this.roundId === 4) {
+    //       // todo: trigger win
+    //     }
+    //   }
+    // })
   },
   computed: {
     isGameActive () {
@@ -140,10 +141,16 @@ export default {
       this.dialog = false
       // this.$router.push('/adduser')
       this.addUser = true
+
+      console.log(this.$listeners)
     },
     continueGame () {
       this.dialog = false
       this.$router.push('/playerround')
+    },
+    closeAddUser (event) {
+      console.log('In add user')
+      this.addUser = false
     },
     startRoundScore () {
       // instead of a plaer id use an index
@@ -174,6 +181,27 @@ export default {
 
       console.log('Player id is ' + scoreUserId)
       console.log('Round Id is ' + this.scoreRoundId)
+    },
+    setScoreForRound (payload) {
+      this.playerIndex = this.playerIndex + 1
+      console.log('PI:' + this.playerIndex)
+      if (this.playerIndex < this.playerList.length) {
+        const scoreUserId = this.playerList[this.playerIndex].id
+
+        let payload = {
+          userId: scoreUserId,
+          roundId: this.scoreRoundId
+        }
+        this.$store.dispatch('setEdit', payload)
+      } else {
+        this.playerIndex = -1
+        this.scoreRoundId = this.scoreRoundId + 1
+        this.roundScore = !this.roundScore
+
+        if (this.roundId === 4) {
+          // todo: trigger win
+        }
+      }
     }
   }
 }

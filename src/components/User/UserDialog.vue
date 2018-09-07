@@ -16,7 +16,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="green darken-1" flat @click.native="addAnother">Add another</v-btn>
-        <v-btn color="green darken-1" flat @click.native="startPlay">Start play</v-btn>
+        <v-btn color="green darken-1" flat @click.native="startPlay" v-if="playerList.length >= 1">Start play</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -32,6 +32,11 @@ export default {
       rules: {
         required: (value) => !!value || 'Required.'
       }
+    }
+  },
+  computed: {
+    playerList () {
+      return this.$store.getters.getUsers
     }
   },
   methods: {
@@ -57,7 +62,7 @@ export default {
       // all this needs to do is then close the dialog after adding
       this.submitNameChange()
       this.$refs.newnameform.reset()
-      this.$parent.$emit('closeAddUser')
+      this.$emit('close-add-user')
     }
   }
 }
