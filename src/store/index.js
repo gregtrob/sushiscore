@@ -12,7 +12,9 @@ export const store = new Vuex.Store({
     // considering the expected max # of users an array should not be much of a perf hit
     players: [],
     editUserId: null,
-    editRoundId: 0,
+    playerEditIndex: -1,
+    editRoundId: 0, // what is the intended diff in these two
+    scoreRoundId: 0, // between edit round id and score round id - score is intended to be as you loop through
     inProgress: false
   },
   mutations: {
@@ -99,6 +101,37 @@ export const store = new Vuex.Store({
     },
     setEdit ({commit}, payload) {
       commit('setEdit', payload)
+    },
+    startRoundScore ({commit, state, dispatch}) {
+      // instead of a plaer id use an index
+      // if that index > length then up the round score id and don't send the payload and set index to none (or 0)
+      // if the round score id goes to 4 then kick off the celebrate page
+      console.log('In start Round score')
+      let scoreUserId = -1
+      let localEditIndex = state.playerEditIndex
+      let roundId = state.scoreRoundId
+      if (state.players != null) {
+        localEditIndex = localEditIndex + 1
+        const player = state.players[localEditIndex]
+
+        console.log(player)
+        if (player != null) {
+          scoreUserId = player.id
+        }
+
+        if (state.playerEditIndex === -1 || state.playerEditIndex === null) {
+          // we only update the round id if the player edit index was "empty"
+          roundId = roundId + 1
+        }
+
+        let payload = {
+          userId: scoreUserId,
+          roundId: roundId,
+          editIndex: localEditIndex
+        }
+        // commit('setEdit', payload) TRYING THIS WHICH IS CORRECT
+        dispatch('setEdit', payload)
+      }
     }
   },
   getters: {
@@ -144,6 +177,20 @@ export const store = new Vuex.Store({
           // this means nothing was ever entered for round 3 so game must be active
           return true
         }
+      }
+    },
+    inEditMode (state) {
+      return (playerId, roundId) => {
+        console.log('Player id ' + playerId)
+        console.log('Round Id' + roundId)
+        if (playerId === state.editUserId) {
+          console.log('Players equal')
+          if (roundId === state.editRoundId) {
+            console.log('Rounds equal')
+            return true
+          }
+        }
+        return false
       }
     }
     // ,
