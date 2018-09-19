@@ -67,6 +67,10 @@
 </template>
 
 <script>
+// TODO: Figure out why the CSS fails to load when offline
+// TODO: Next step is in Vuex for round editing marked appropriately
+// TODO: Create winner "view"
+// TODO: Cleanup leftover from edit reworking
 import RoundScoreDialog from './Scorecard/RoundScoreDialog.vue'
 import UserDialog from './User/UserDialog.vue'
 import PlayerRound from './Game/PlayerRound.vue'
@@ -91,32 +95,6 @@ export default {
         required: (value) => !!value || 'Required.'
       }
     }
-  },
-  created () {
-    // this.$on('closeAddUser', function () {
-    //   this.addUser = false
-    // })
-    // this.$on('usersetscoreforround', function () {
-    //   this.playerIndex = this.playerIndex + 1
-    //   console.log('PI:' + this.playerIndex)
-    //   if (this.playerIndex < this.playerList.length) {
-    //     const scoreUserId = this.playerList[this.playerIndex].id
-
-    //     let payload = {
-    //       userId: scoreUserId,
-    //       roundId: this.scoreRoundId
-    //     }
-    //     this.$store.dispatch('setEdit', payload)
-    //   } else {
-    //     this.playerIndex = -1
-    //     this.scoreRoundId = this.scoreRoundId + 1
-    //     this.roundScore = !this.roundScore
-
-    //     if (this.roundId === 4) {
-    //       // todo: trigger win
-    //     }
-    //   }
-    // })
   },
   computed: {
     isGameActive () {

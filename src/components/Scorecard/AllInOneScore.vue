@@ -81,6 +81,7 @@ export default {
   methods: {
     setEditMode () {
       if (this.localScoreEditMode) {
+        // TODO: WTF does this even mean
         // if we're in edit mode we don't do anything here because we dont' allow the icon to do this
         return
       }

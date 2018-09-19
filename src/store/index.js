@@ -53,10 +53,54 @@ export const store = new Vuex.Store({
       // turn off editing player
       state.editUserId = null
       // do we need to ensure editUserId equals the payload user id?
+
+      // TODO: Here is where when the edit is done we need to check
+      // Was this a round eidt?  if so then move on the next player
+      // if the end e.g. last round and last user then trigger "winner winner"
+      if (state.playerEditIndex !== null || state.playerEditIndex !== -1) {
+        // TODO: Inside here we need to use the same logic as
+        // the startScoreForRound to set payload/etc
+        let localEditIndex = state.playerEditIndex
+        let roundId = state.editRoundId
+        let scoreUserId = state.editUserId
+
+        if (localEditIndex + 1 < state.players.length) {
+          localEditIndex = localEditIndex + 1
+          scoreUserId = state.players[localEditIndex].id
+        } else {
+          // End of round editing
+          localEditIndex = -1
+          scoreUserId = null
+
+          if (state.scoreRoundId === 3) {
+            // trigger Winner
+            console.log('Winner is TBD')
+          }
+        }
+
+        const payload = {
+          userId: scoreUserId,
+          roundId: roundId,
+          editIndex: localEditIndex
+        }
+        // commit('setEdit', payload) TRYING THIS WHICH IS CORRECT
+        // TODO: This is ugly copying code around need to find right fix
+        state.editRoundId = payload.roundId
+        state.editUserId = payload.userId
+
+        if (typeof payload.editIndex !== 'undefined') {
+          state.playerEditIndex = payload.editIndex
+        }
+      }
     },
     setEdit (state, payload) {
+      console.log('In setEdit')
       state.editRoundId = payload.roundId
       state.editUserId = payload.userId
+
+      if (typeof payload.editIndex !== 'undefined') {
+        state.playerEditIndex = payload.editIndex
+      }
     },
     // setEndOfGameScore (state, payload) {
     // },
