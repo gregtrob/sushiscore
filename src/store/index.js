@@ -58,8 +58,6 @@ export const store = new Vuex.Store({
       // Was this a round eidt?  if so then move on the next player
       // if the end e.g. last round and last user then trigger "winner winner"
       if (state.playerEditIndex !== null || state.playerEditIndex !== -1) {
-        // TODO: Inside here we need to use the same logic as
-        // the startScoreForRound to set payload/etc
         let localEditIndex = state.playerEditIndex
         let roundId = state.editRoundId
         let scoreUserId = state.editUserId
@@ -72,7 +70,7 @@ export const store = new Vuex.Store({
           localEditIndex = -1
           scoreUserId = null
 
-          if (state.scoreRoundId === 3) {
+          if (state.editRoundId === 3) {
             // trigger Winner
             console.log('Winner is TBD')
           }
@@ -83,7 +81,6 @@ export const store = new Vuex.Store({
           roundId: roundId,
           editIndex: localEditIndex
         }
-        // commit('setEdit', payload) TRYING THIS WHICH IS CORRECT
         // TODO: This is ugly copying code around need to find right fix
         state.editRoundId = payload.roundId
         state.editUserId = payload.userId
@@ -153,7 +150,7 @@ export const store = new Vuex.Store({
       console.log('In start Round score')
       let scoreUserId = -1
       let localEditIndex = state.playerEditIndex
-      let roundId = state.scoreRoundId
+      let roundId = state.editRoundId
       if (state.players != null) {
         localEditIndex = localEditIndex + 1
         const player = state.players[localEditIndex]
