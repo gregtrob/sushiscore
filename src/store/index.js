@@ -13,8 +13,8 @@ export const store = new Vuex.Store({
     players: [],
     editUserId: null,
     playerEditIndex: -1,
-    editRoundId: 0, // what is the intended diff in these two
-    scoreRoundId: 0, // between edit round id and score round id - score is intended to be as you loop through
+    lastRoundScored: 0, // used for when a single edit for a round is happening
+    scoreRoundId: 0, // used when looping trhough rounds
     inProgress: false
   },
   mutations: {
@@ -57,10 +57,13 @@ export const store = new Vuex.Store({
       // TODO: Here is where when the edit is done we need to check
       // Was this a round eidt?  if so then move on the next player
       // if the end e.g. last round and last user then trigger "winner winner"
-      if (state.playerEditIndex !== null || state.playerEditIndex !== -1) {
-        let localEditIndex = state.playerEditIndex
-        let roundId = state.editRoundId
-        let scoreUserId = state.editUserId
+
+      let localEditIndex = state.playerEditIndex
+      let roundId = state.scoreRoundId
+      let scoreUserId = state.editUserId
+
+      if (state.playerEditIndex !== null && state.playerEditIndex !== -1) {
+        state.lastRoundScored = roundId
 
         if (localEditIndex + 1 < state.players.length) {
           localEditIndex = localEditIndex + 1
@@ -70,40 +73,41 @@ export const store = new Vuex.Store({
           localEditIndex = -1
           scoreUserId = null
 
-          if (state.editRoundId === 3) {
+          if (roundId === 3) {
             // trigger Winner
             console.log('Winner is TBD')
           }
         }
+      } else {
+        // there was no editIndex so presume this is a local edit only
+        localEditIndex = -1
+        scoreUserId = null
+        roundId = 0
+      }
 
-        const payload = {
-          userId: scoreUserId,
-          roundId: roundId,
-          editIndex: localEditIndex
-        }
-        // TODO: This is ugly copying code around need to find right fix
-        state.editRoundId = payload.roundId
-        state.editUserId = payload.userId
-
-        if (typeof payload.editIndex !== 'undefined') {
-          state.playerEditIndex = payload.editIndex
-        }
+      const scorePayload = {
+        userId: scoreUserId,
+        roundId: roundId,
+        editIndex: localEditIndex
+      }
+      // TODO: This is ugly copying code around need to find right fix
+      state.editUserId = scorePayload.userId
+      state.lastRoundScored = state.scoreRoundId
+      state.scoreRoundId = scorePayload.roundId
+      if (typeof scorePayload.editIndex !== 'undefined') {
+        state.playerEditIndex = scorePayload.editIndex
       }
     },
     setEdit (state, payload) {
       console.log('In setEdit')
-      state.editRoundId = payload.roundId
       state.editUserId = payload.userId
 
+      state.lastRoundScored = state.scoreRoundId
+      state.scoreRoundId = payload.roundId
       if (typeof payload.editIndex !== 'undefined') {
         state.playerEditIndex = payload.editIndex
       }
     },
-    // setEndOfGameScore (state, payload) {
-    // },
-    // setUsername (state, payload) {
-    //   console.log(payload)
-    // },
     addUser (state, payload) {
       state.players.set(payload.id, payload)
     },
@@ -150,7 +154,7 @@ export const store = new Vuex.Store({
       console.log('In start Round score')
       let scoreUserId = -1
       let localEditIndex = state.playerEditIndex
-      let roundId = state.editRoundId
+      let roundId = state.lastRoundScored
       if (state.players != null) {
         localEditIndex = localEditIndex + 1
         const player = state.players[localEditIndex]
@@ -170,7 +174,6 @@ export const store = new Vuex.Store({
           roundId: roundId,
           editIndex: localEditIndex
         }
-        // commit('setEdit', payload) TRYING THIS WHICH IS CORRECT
         dispatch('setEdit', payload)
       }
     }
@@ -179,7 +182,7 @@ export const store = new Vuex.Store({
     getEditDetails (state) {
       return {
         userId: state.editUserId,
-        roundId: state.editRoundId
+        roundId: state.scoreRoundId
       }
     },
     isAnyoneEditing (state) {
@@ -226,7 +229,7 @@ export const store = new Vuex.Store({
         console.log('Round Id' + roundId)
         if (playerId === state.editUserId) {
           console.log('Players equal')
-          if (roundId === state.editRoundId) {
+          if (roundId === state.scoreRoundId) {
             console.log('Rounds equal')
             return true
           }
