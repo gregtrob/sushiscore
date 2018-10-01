@@ -19,6 +19,7 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setScoreForRound (state, payload) {
+      // TODO: Somehwere in here you have to do the score recalc for all each time
       // I think if you find the player then you must remove them from the array
       // then update it at the end
       let player = null
@@ -54,16 +55,12 @@ export const store = new Vuex.Store({
       state.editUserId = null
       // do we need to ensure editUserId equals the payload user id?
 
-      // TODO: Here is where when the edit is done we need to check
-      // Was this a round eidt?  if so then move on the next player
-      // if the end e.g. last round and last user then trigger "winner winner"
-
       let localEditIndex = state.playerEditIndex
       let roundId = state.scoreRoundId
       let scoreUserId = state.editUserId
 
       if (state.playerEditIndex !== null && state.playerEditIndex !== -1) {
-        state.lastRoundScored = roundId
+        state.lastRoundScored = roundId // only set this here because it means we were doing a score round
 
         if (localEditIndex + 1 < state.players.length) {
           localEditIndex = localEditIndex + 1
@@ -73,29 +70,24 @@ export const store = new Vuex.Store({
           localEditIndex = -1
           scoreUserId = null
 
+          // TODO: Trigger the round scoring here
+
           if (roundId === 3) {
             // trigger Winner
             console.log('Winner is TBD')
           }
         }
+
+        state.scoreRoundId = roundId
+        state.editUserId = scoreUserId
+        state.playerEditIndex = localEditIndex
       } else {
         // there was no editIndex so presume this is a local edit only
-        localEditIndex = -1
-        scoreUserId = null
-        roundId = 0
-      }
+        state.scoreRoundId = 0
+        state.editUserId = null
+        state.playerEditIndex = -1
 
-      const scorePayload = {
-        userId: scoreUserId,
-        roundId: roundId,
-        editIndex: localEditIndex
-      }
-      // TODO: This is ugly copying code around need to find right fix
-      state.editUserId = scorePayload.userId
-      state.lastRoundScored = state.scoreRoundId
-      state.scoreRoundId = scorePayload.roundId
-      if (typeof scorePayload.editIndex !== 'undefined') {
-        state.playerEditIndex = scorePayload.editIndex
+        // TODO: always trigger round score reset here
       }
     },
     setEdit (state, payload) {
@@ -105,6 +97,7 @@ export const store = new Vuex.Store({
       state.lastRoundScored = state.scoreRoundId
       state.scoreRoundId = payload.roundId
       if (typeof payload.editIndex !== 'undefined') {
+        state.lastRoundScored = payload.roundId
         state.playerEditIndex = payload.editIndex
       }
     },

@@ -68,7 +68,6 @@
 
 <script>
 // TODO: Figure out why the CSS fails to load when offline
-// TODO: Next step is in Vuex for round editing marked appropriately
 // TODO: Create winner "view"
 // TODO: Cleanup leftover from edit reworking
 import RoundScoreDialog from './Scorecard/RoundScoreDialog.vue'
@@ -117,10 +116,7 @@ export default {
   methods: {
     startNewGame () {
       this.dialog = false
-      // this.$router.push('/adduser')
       this.addUser = true
-
-      console.log(this.$listeners)
     },
     continueGame () {
       this.dialog = false
@@ -131,41 +127,10 @@ export default {
       this.addUser = false
     },
     startRoundScore () {
-      // instead of a plaer id use an index
-      // if that index > length then up the round score id and don't send the payload and set index to none (or 0)
-      // if the round score id goes to 4 then kick off the celebrate page
-      // let scoreUserId = -1
-      // if (this.playerList != null) {
-      //   console.log(this.playerList)
-      //   console.log('Score user id' + scoreUserId)
-      //   console.log('Player Index' + this.playerIndex)
-      //   this.playerIndex = this.playerIndex + 1
-      //   console.log('Player index' + this.playerIndex)
-      //   const player = this.playerList[this.playerIndex]
-
-      //   console.log(player)
-      //   if (player != null) {
-      //     scoreUserId = player.id
-      //   }
-
-      //   let payload = {
-      //     userId: scoreUserId,
-      //     roundId: this.scoreRoundId
-      //   }
-      //   this.$store.dispatch('setEdit', payload)
-
-      //   this.roundScore = !this.roundScore
-      // }
-
-      // console.log('Player id is ' + scoreUserId)
-      // console.log('Round Id is ' + this.scoreRoundId)
-      console.log('dispatch')
       this.$store.dispatch('startRoundScore')
-      console.log('dispatch end')
     },
     setScoreForRound (payload) {
       this.playerIndex = this.playerIndex + 1
-      console.log('PI:' + this.playerIndex)
       if (this.playerIndex < this.playerList.length) {
         const scoreUserId = this.playerList[this.playerIndex].id
 

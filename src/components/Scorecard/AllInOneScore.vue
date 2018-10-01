@@ -38,7 +38,6 @@ export default {
       return !this.$store.getters.isAnyoneEditing
     },
     inEditMode () {
-      // return this.localScoreEditMode || this.parentScoreEditMode
       return this.$store.getters.inEditMode(this.userId, this.roundId)
     },
     userHasScore () {
