@@ -29,7 +29,6 @@ export default {
     'all-in-one-round-score': AllInoOneScoreForRound
   },
   computed: {
-    // TODO: I don't think this is needed any more as part of editing
     editRound1 () {
       return this.getEditDetails(1)
     },

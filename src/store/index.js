@@ -19,7 +19,6 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setScoreForRound (state, payload) {
-      // TODO: Somehwere in here you have to do the score recalc for all each time
       // I think if you find the player then you must remove them from the array
       // then update it at the end
       let player = null

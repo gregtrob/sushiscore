@@ -61,15 +61,12 @@ export default {
       this.nameEditMode = !this.nameEditMode
     },
     submitNameChange () {
-      console.log('name change' + this.newUserName)
-      // TODO: Submit this to the main thing
       let payload = {
         id: this.userId.toString(),
         name: this.newUserName
       }
       this.$store.dispatch('changeUserName', payload)
       this.nameEditMode = false
-      console.log(this.$store.getters.getUsers)
     }
   }
 }

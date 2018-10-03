@@ -69,7 +69,6 @@
 <script>
 // TODO: Figure out why the CSS fails to load when offline
 // TODO: Create winner "view"
-// TODO: Cleanup leftover from edit reworking
 import RoundScoreDialog from './Scorecard/RoundScoreDialog.vue'
 import UserDialog from './User/UserDialog.vue'
 import PlayerRound from './Game/PlayerRound.vue'

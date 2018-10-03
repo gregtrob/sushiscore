@@ -13,7 +13,6 @@ class Player {
     this.id = uuid()
   }
 
-  // TODO: add tests
   getRoundScore (roundId) {
     let rs = null
     let intRoundId = parseInt(roundId)
@@ -77,7 +76,6 @@ class RoundScore {
       squidNoWasabi, squidWithWasabi)
   }
 
-  // TODO: Add test cases for this
   getCardScore () {
     const tempuraScore = this.getTempuraScore()
     const sashimiScore = this.getSashimiScore()
