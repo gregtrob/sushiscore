@@ -2,7 +2,7 @@
 
 <v-layout justify-center>
 
-    <v-container fluid grid-list-sm>
+    <v-container fluid grid-list-sm v-if="!showWinners">
       <v-layout row wrap justify-center>
 
         <v-flex xs4 v-for="player in playerList" :key="player.id">
@@ -35,6 +35,11 @@
 
     </v-layout>
 
+    </v-container>
+
+    <v-container fluid grid-list-sm v-else>
+      Showing winners ... 
+      <winner></winner>
     </v-container>
 
     <v-dialog v-model="dialog" persistent max-width="290" v-if="isGameActive">
@@ -72,13 +77,15 @@
 import RoundScoreDialog from './Scorecard/RoundScoreDialog.vue'
 import UserDialog from './User/UserDialog.vue'
 import PlayerRound from './Game/PlayerRound.vue'
+import Winner from './Game/Winner.vue'
 
 export default {
   name: 'hello',
   components: {
     'add-user': UserDialog,
     'round-score-dialog': RoundScoreDialog,
-    'player-round': PlayerRound
+    'player-round': PlayerRound,
+    'winner': Winner
   },
   data () {
     return {
@@ -95,6 +102,10 @@ export default {
     }
   },
   computed: {
+    showWinners () {
+      console.log(this.$store.getters.showWinners)
+      return this.$store.getters.showWinners
+    },
     isGameActive () {
       return this.$store.getters.isGameActive
     },

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {Player} from '@/store/services/score'
+import {Player, Scorer} from '@/store/services/score'
 
 Vue.use(Vuex)
 
@@ -15,7 +15,8 @@ export const store = new Vuex.Store({
     playerEditIndex: -1,
     lastRoundScored: 0, // used for when a single edit for a round is happening
     scoreRoundId: 0, // used when looping trhough rounds
-    inProgress: false
+    inProgress: false,
+    showWinners: false
   },
   mutations: {
     setScoreForRound (state, payload) {
@@ -69,9 +70,19 @@ export const store = new Vuex.Store({
           localEditIndex = -1
           scoreUserId = null
 
-          // TODO: Trigger the round scoring here
+          // TODO: Debugging the round scores
+          const roundScores = state.players.map(a => a.getRoundScore(roundId))
+          console.log('Scores for round ' + roundId)
+          console.log(roundScores)
+          Scorer.findMakiWinners(roundScores)
+          console.log(typeof roundId)
 
           if (roundId === 3) {
+            // TODO: Debug the score of the game
+            Scorer.scoreGame(state.players)
+
+            state.showWinners = true
+
             // trigger Winner
             console.log('Winner is TBD')
           }
@@ -190,6 +201,9 @@ export const store = new Vuex.Store({
         return player
       }
     },
+    showWinners (state) {
+      return state.showWinners
+    },
     getUsers (state) {
       // console.log(state.players)
       return state.players
@@ -217,10 +231,10 @@ export const store = new Vuex.Store({
     },
     inEditMode (state) {
       return (playerId, roundId) => {
-        console.log('Player id ' + playerId)
-        console.log('Round Id' + roundId)
+        // console.log('Player id ' + playerId)
+        // console.log('Round Id' + roundId)
         if (playerId === state.editUserId) {
-          console.log('Players equal')
+          // console.log('Players equal')
           if (roundId === state.scoreRoundId) {
             console.log('Rounds equal')
             return true
