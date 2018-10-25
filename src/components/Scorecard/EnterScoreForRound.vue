@@ -190,8 +190,6 @@ export default {
       const player = this.player
       if (player) {
         let tempRS = player.getRoundScore(this.roundId)
-        console.log(tempRS)
-
         if (tempRS) {
           rs = tempRS
         }
@@ -204,8 +202,6 @@ export default {
   },
   methods: {
     handleSubmit: function () {
-      console.log('Here I am')
-      console.log(this.scoreForRound)
       const localRS = this.scoreForRound
       if (!checkNumber(localRS.makiPoints)) {
         localRS.makiPoints = 0
@@ -244,12 +240,12 @@ export default {
       }
 
       localRS.nigiriCards = nc
-      console.log('Before total')
-      console.log(localRS)
+      // console.log('Before total')
+      // console.log(localRS)
       localRS.getTotal()
-      console.log('Local')
-      console.log(localRS)
-      console.log(this.player)
+      // console.log('Local')
+      // console.log(localRS)
+      // console.log(this.player)
       const payload = {
         id: this.player.id,
         roundId: this.roundId,

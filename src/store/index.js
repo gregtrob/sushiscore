@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     // array position
     // considering the expected max # of users an array should not be much of a perf hit
     players: [],
+    winnerList: [],
     editUserId: null,
     playerEditIndex: -1,
     lastRoundScored: 0, // used for when a single edit for a round is happening
@@ -24,11 +25,8 @@ export const store = new Vuex.Store({
       // then update it at the end
       let player = null
       if (payload.id) {
-        // console.log('In payload.id')
         player = state.players.find(function isId (statePlayer) {
           const val = statePlayer.id === payload.id
-          // console.log(val)
-          // console.log('State Player' + statePlayer)
           return val
         })
       }
@@ -72,19 +70,11 @@ export const store = new Vuex.Store({
 
           // TODO: Debugging the round scores
           const roundScores = state.players.map(a => a.getRoundScore(roundId))
-          console.log('Scores for round ' + roundId)
-          console.log(roundScores)
           Scorer.findMakiWinners(roundScores)
-          console.log(typeof roundId)
 
           if (roundId === 3) {
-            // TODO: Debug the score of the game
-            Scorer.scoreGame(state.players)
-
+            state.winnerList = Scorer.scoreGame(state.players)
             state.showWinners = true
-
-            // trigger Winner
-            console.log('Winner is TBD')
           }
         }
 
@@ -101,7 +91,6 @@ export const store = new Vuex.Store({
       }
     },
     setEdit (state, payload) {
-      console.log('In setEdit')
       state.editUserId = payload.userId
 
       state.lastRoundScored = state.scoreRoundId
@@ -154,7 +143,6 @@ export const store = new Vuex.Store({
       // instead of a plaer id use an index
       // if that index > length then up the round score id and don't send the payload and set index to none (or 0)
       // if the round score id goes to 4 then kick off the celebrate page
-      console.log('In start Round score')
       let scoreUserId = -1
       let localEditIndex = state.playerEditIndex
       let roundId = state.lastRoundScored
@@ -162,7 +150,6 @@ export const store = new Vuex.Store({
         localEditIndex = localEditIndex + 1
         const player = state.players[localEditIndex]
 
-        console.log(player)
         if (player != null) {
           scoreUserId = player.id
         }
@@ -204,8 +191,10 @@ export const store = new Vuex.Store({
     showWinners (state) {
       return state.showWinners
     },
+    getWinnerList (state) {
+      return state.winnerList
+    },
     getUsers (state) {
-      // console.log(state.players)
       return state.players
     },
     isGameActive (state) {
@@ -236,21 +225,11 @@ export const store = new Vuex.Store({
         if (playerId === state.editUserId) {
           // console.log('Players equal')
           if (roundId === state.scoreRoundId) {
-            console.log('Rounds equal')
             return true
           }
         }
         return false
       }
     }
-    // ,
-    // getScoresForRound (state) {
-    //   return state.users
-    //   // return (meetupId) => {
-    //   //   return state.loadedMeetups.find((meetup) => {
-    //   //     return meetup.id === meetupId
-    //   //   })
-    //   // }
-    // }
   }
 })
